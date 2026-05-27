@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Diagnóstico Técnico de Cliente · SSP SLON DE VENEZUELA</title>
+
+<!-- ═══════════════════════════════════════════════════════════
+     CONFIGURACIÓN  ←  EDITAR ANTES DE PUBLICAR
+     1. Reemplaza SCRIPT_URL con la URL de tu Google Apps Script Web App
+     2. Reemplaza el email en la sección de contacto si es necesario
+════════════════════════════════════════════════════════════ -->
+<script>
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxBguTdJ9CozIapKUEbFuku285N-K46hm3MRWnrODOCJeODRmzdpyLqcKspduqOvfJ9Ng/exec";
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+<style>
+/* ── Reset & Base ─────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Barlow', sans-serif;
+  background: #0A0A0A;
+  color: #F0F0F0;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+}
+
+/* ── Tokens ───────────────────────────────────────────── */
+:root {
+  --red:        #CC0000;
+  --dred:       #990000;
+  --ared:       #FF3333;
+  --dark:       #141414;
+  --mid:        #1E1E1E;
+  --card:       #1C1C1C;
+  --card2:      #242424;
+  --border:     #2E2E2E;
+  --border2:    #3A3A3A;
+  --text:       #F0F0F0;
+  --text2:      #AAAAAA;
+  --text3:      #666666;
+  --inp:        #181818;
+  --inp-focus:  #1F0000;
+  --check:      #CC0000;
+  --r:          8px;
+  --rl:         12px;
+  --rxl:        16px;
+}
+
+/* ── Layout ───────────────────────────────────────────── */
+.page-wrap {
+  max-width: 800px;
+  margin: 0 auto;
+  padding-bottom: 100px;
+}
+
+/* ── Top Bar ──────────────────────────────────────────── */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background: var(--dark);
+  border-bottom: 2.5px solid var(--red);
+  padding: 16px 20px 14px;
+  backdrop-filter: blur(8px);
+}
+.topbar-inner {
+  max-width: 800px;
+  margin: 0 auto;
+}
+.brand-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+.logomark {
+  width: 46px;
+  height: 46px;
+  background: var(--red);
+  border-radius: 5px;
+  display: grid;
+  place-items: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-size: 13px;
+  color: white;
+  letter-spacing: -0.5px;
+  line-height: 1.15;
+  text-align: center;
+  flex-shrink: 0;
+}
+.brand-text h1 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: white;
+  line-height: 1.1;
+}
+.brand-text p {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text3);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.progress-row {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.prog-track {
+  flex: 1;
+  display: flex;
+  gap: 3px;
+}
+.prog-seg {
+  flex: 1;
+  height: 3px;
+  background: var(--border2);
+  border-radius: 2px;
+  transition: background 0.35s ease, transform 0.35s ease;
+}
+.prog-seg.done  { background: var(--red); }
+.prog-seg.active {
+  background: var(--ared);
+  box-shadow: 0 0 6px rgba(255,51,51,0.5);
+}
+.prog-label {
+  font-size: 11px;
+  color: var(--text3);
+  margin-left: 10px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Section Pills ────────────────────────────────────── */
+.pills-track {
+  background: var(--mid);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 87px;
+  z-index: 150;
+}
+.pills-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  gap: 4px;
+  padding: 10px 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.pills-inner::-webkit-scrollbar { display: none; }
+.pill {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border2);
+  background: transparent;
+  font-family: 'Barlow', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text3);
+  cursor: pointer;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.pill:hover  { border-color: #555; color: var(--text2); }
+.pill.active { background: var(--red); border-color: var(--red); color: white; }
+.pill.done   { background: #1A2A1A; border-color: #2A5A2A; color: #6DBF6D; }
+.pill-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+.pill.active .pill-dot { background: white; }
+
+/* ── Section Content Area ─────────────────────────────── */
+.sec-body {
+  padding: 20px 16px 0;
+  animation: fadeSlide 0.22s ease both;
+}
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Section Header Card ──────────────────────────────── */
+.sec-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 20px;
+  background: var(--card);
+  border-radius: var(--rl);
+  border-left: 4px solid var(--red);
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.sec-head::after {
+  content: '';
+  position: absolute;
+  right: -10px; top: -16px;
+  width: 70px; height: 70px;
+  border-radius: 50%;
+  background: var(--red);
+  opacity: 0.05;
+  pointer-events: none;
+}
+.sec-emoji { font-size: 30px; line-height: 1; flex-shrink: 0; margin-top: 3px; }
+.sec-num {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 3px;
+}
+.sec-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: white;
+  line-height: 1.1;
+}
+.sec-sub {
+  font-size: 12.5px;
+  color: var(--text2);
+  margin-top: 4px;
+  line-height: 1.5;
+}
+
+/* ── Fields Card ──────────────────────────────────────── */
+.fields-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--rl);
+  padding: 20px;
+}
+.fields-card + .fields-card { margin-top: 10px; }
+
+.hint-bar {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: #181200;
+  border: 1px solid #3A3000;
+  border-left: 3px solid #CC7700;
+  border-radius: var(--r);
+  padding: 10px 14px;
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 16px;
+  line-height: 1.55;
+}
+
+/* ── Individual Field ─────────────────────────────────── */
+.field { margin-bottom: 22px; }
+.field:last-child { margin-bottom: 0; }
+
+.field-lbl {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+.req {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--red);
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+.field-hint {
+  font-size: 12px;
+  color: var(--text3);
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+/* ── Inputs ───────────────────────────────────────────── */
+input[type=text], input[type=email], input[type=tel], textarea {
+  display: block;
+  width: 100%;
+  background: var(--inp);
+  border: 1.5px solid var(--border2);
+  border-radius: var(--r);
+  color: var(--text);
+  font-family: 'Barlow', sans-serif;
+  font-size: 15px;
+  padding: 13px 15px;
+  outline: none;
+  transition: border-color 0.18s ease, background 0.18s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+input:focus, textarea:focus {
+  border-color: var(--red);
+  background: var(--inp-focus);
+}
+textarea { resize: vertical; min-height: 95px; line-height: 1.55; }
+::placeholder { color: var(--text3); }
+
+/* ── Option List ──────────────────────────────────────── */
+.opts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.opt {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--r);
+  border: 1.5px solid var(--border2);
+  background: var(--inp);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  min-height: 48px;
+}
+.opt:hover  { border-color: #4A4A4A; background: #202020; }
+.opt.sel    { border-color: var(--red); background: #1A0000; }
+.opt-box {
+  width: 21px; height: 21px;
+  border: 2px solid var(--border2);
+  border-radius: 4px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s, background 0.15s;
+  margin-top: 1px;
+}
+.opt-box.circle { border-radius: 50%; }
+.opt.sel .opt-box { background: var(--red); border-color: var(--red); }
+.opt-check { font-size: 11px; font-weight: 700; color: white; line-height: 1; }
+.opt-radio-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: white;
+}
+.opt-txt {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.4;
+  padding-top: 1px;
+}
+
+/* ── Bottom Nav ───────────────────────────────────────── */
+.nav-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: var(--dark);
+  border-top: 1px solid var(--border);
+  z-index: 300;
+}
+.nav-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 11px 16px;
+  display: flex;
+  gap: 10px;
+}
+.btn {
+  flex: 1;
+  padding: 15px 20px;
+  border-radius: var(--r);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.16s ease;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.btn-prev {
+  background: transparent;
+  border: 1.5px solid var(--border2);
+  color: var(--text2);
+  flex: 0.55;
+}
+.btn-prev:hover { border-color: var(--red); color: var(--text); }
+.btn-next {
+  background: var(--red);
+  color: white;
+}
+.btn-next:hover { background: #BB0000; }
+.btn-next:active { transform: scale(0.98); }
+.btn-submit {
+  background: linear-gradient(135deg, var(--red), var(--dred));
+  color: white;
+  font-size: 16px;
+}
+.btn-submit:active { transform: scale(0.99); }
+
+/* ── Error Toast ──────────────────────────────────────── */
+.toast {
+  position: fixed;
+  top: 100px; left: 50%; transform: translateX(-50%);
+  background: #2A0000;
+  border: 1px solid #660000;
+  border-radius: var(--r);
+  padding: 10px 18px;
+  font-size: 13.5px;
+  color: #FF8080;
+  z-index: 1000;
+  white-space: nowrap;
+  animation: toastIn 0.2s ease;
+  pointer-events: none;
+}
+@keyframes toastIn {
+  from { opacity: 0; transform: translate(-50%, -8px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* ── Sending Overlay ──────────────────────────────────── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.88);
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+.spinner {
+  width: 44px; height: 44px;
+  border: 3px solid var(--border2);
+  border-top-color: var(--red);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.overlay-txt {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--text2);
+}
+
+/* ── Success Screen ───────────────────────────────────── */
+.success-screen {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 70vh;
+  padding: 48px 24px;
+  gap: 18px;
+  animation: fadeSlide 0.3s ease;
+}
+.success-screen.show { display: flex; }
+.success-orb {
+  width: 88px; height: 88px;
+  background: radial-gradient(circle, var(--red) 0%, var(--dred) 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  box-shadow: 0 0 40px rgba(204,0,0,0.25), 0 0 80px rgba(204,0,0,0.1);
+}
+.success-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 36px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  color: white;
+}
+.success-sub {
+  font-size: 15px;
+  color: var(--text2);
+  line-height: 1.65;
+  max-width: 400px;
+}
+.success-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--rl);
+  padding: 14px 22px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text2);
+}
+.success-tagline {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  color: var(--red);
+  text-transform: uppercase;
+}
+
+/* ── Responsive ───────────────────────────────────────── */
+@media (max-width: 540px) {
+  .topbar { padding: 12px 14px 10px; }
+  .sec-body { padding: 14px 10px 0; }
+  .sec-title { font-size: 22px; }
+  .brand-text h1 { font-size: 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ TOP BAR ═══ -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand-row">
+      <div class="logomark">SSP<br>SLON</div>
+      <div class="brand-text">
+        <h1>SSP SLON DE VENEZUELA, C.A.</h1>
+        <p>Diagnóstico técnico de cliente</p>
+      </div>
+    </div>
+    <div class="progress-row">
+      <div class="prog-track" id="progTrack"></div>
+      <span class="prog-label" id="progLabel">1 / 7</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SECTION PILLS ═══ -->
+<div class="pills-track">
+  <div class="pills-inner" id="pillsInner"></div>
+</div>
+
+<!-- ═══ MAIN CONTENT ═══ -->
+<div class="page-wrap">
+
+  <!-- Section panels injected by JS -->
+  <div id="formBody"></div>
+
+  <!-- Success Screen -->
+  <div class="success-screen" id="successScreen">
+    <div class="success-orb">✅</div>
+    <div class="success-title">¡Diagnóstico Enviado!</div>
+    <div class="success-sub">
+      Un ingeniero de SSP SLON revisará su información y se contactará en menos de
+      <strong style="color:var(--red)">48 horas</strong> con una propuesta técnica personalizada.
+    </div>
+    <div class="success-card">
+      <span>📧</span>
+      <span>info@sspslon.com · www.sspslon.com</span>
+    </div>
+    <div class="success-card">
+      <span>📞</span>
+      <span id="contactoNombre" style="color:var(--text)"></span>
+    </div>
+    <div class="success-tagline">Fuerza · Seguridad · Solución</div>
+  </div>
+
+</div>
+
+<!-- ═══ BOTTOM NAV ═══ -->
+<div class="nav-bar" id="navBar">
+  <div class="nav-inner">
+    <button class="btn btn-prev" id="btnPrev" style="display:none" onclick="prevSec()">← Anterior</button>
+    <button class="btn btn-next" id="btnNext" onclick="nextSec()">Siguiente →</button>
+  </div>
+</div>
+
+<!-- Sending overlay -->
+<div class="overlay" id="overlay" style="display:none">
+  <div class="spinner"></div>
+  <div class="overlay-txt">Enviando diagnóstico…</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     DATA & LOGIC
+════════════════════════════════════════════════════════════ -->
+<script>
+/* ─── Section Definitions ────────────────────────────────── */
+const SECTIONS = [
+  {
+    emoji:"🏢", title:"Datos del Cliente",
+    sub:"Empresa operadora y contacto técnico responsable",
+    fields:[
+      {id:"empresa",       type:"text",  label:"Empresa / Operadora",            ph:"Ej: PETROMONAGAS, PETROPIAR, PDVSA División Oriente…", req:true},
+      {id:"campo",         type:"text",  label:"División / Campo / Macolla",      ph:"Ej: División Oriente — Campo Maturín Norte", req:true},
+      {id:"region",        type:"check", label:"Región operacional",              req:true,
+        opts:["Faja del Orinoco — Bloque Boyacá","Faja del Orinoco — Bloque Junín","Faja del Orinoco — Bloque Ayacucho","Faja del Orinoco — Bloque Carabobo","División Oriente — Edo. Monagas","División Oriente — Edo. Anzoátegui","Cuenca del Lago de Maracaibo","Costa Afuera / Offshore","Otra región"]},
+      {id:"contacto",      type:"text",  label:"Nombre del contacto técnico",    req:true},
+      {id:"cargo",         type:"text",  label:"Cargo / Posición",               ph:"Ej: Supervisor de Producción, Ing. de Fluidos…"},
+      {id:"email",         type:"email", label:"Correo electrónico",             ph:"nombre@empresa.com", req:true},
+      {id:"telefono",      type:"tel",   label:"Teléfono / WhatsApp",            ph:"+58-424-000-0000"},
+      {id:"urgencia",      type:"radio", label:"Urgencia de la propuesta técnica", req:true,
+        opts:["Urgente — menos de 1 semana","Normal — 2 a 4 semanas","Exploración — sin plazo definido","Licitación en proceso (especificar en observaciones)"]},
+    ]
+  },
+  {
+    emoji:"⛽", title:"Datos de Producción",
+    sub:"Parámetros técnicos del campo — base para el cálculo de volúmenes químicos",
+    fields:[
+      {id:"bopd",          type:"text",  label:"Producción actual (BOPD)",       ph:"Ej: 10,000", req:true,
+        hint:"Barriles de petróleo por día. Si el campo tiene varios pozos, indicar el total."},
+      {id:"bopd_obj",      type:"text",  label:"Producción objetivo a 6 meses (BOPD)", ph:"Ej: 12,500"},
+      {id:"bsw",           type:"text",  label:"BSW — Corte de agua (%)",        ph:"Ej: 60",
+        hint:"Porcentaje del fluido producido que es agua. Rango típico Faja: 50–80%."},
+      {id:"tipo_crudo",    type:"radio", label:"Tipo de crudo",                  req:true,
+        opts:["Liviano (>30° API)","Mediano (20–30° API)","Pesado (10–20° API)","Extrapesado (<10° API) — Faja Orinoco","No lo sé / Sin información"]},
+      {id:"api",           type:"text",  label:"Gravedad API del crudo",         ph:"Ej: 8.5° API"},
+      {id:"h2s_ppm",       type:"text",  label:"H₂S en el crudo (ppm)",         ph:"Ej: 500 ppm  ·  o escribir 0"},
+      {id:"co2_pct",       type:"text",  label:"CO₂ en gas asociado (% vol)",   ph:"Ej: 3.5%  ·  o 'No medido'"},
+      {id:"temp_fondo",    type:"text",  label:"Temperatura de fondo del pozo", ph:"Ej: 160°F o 71°C — indicar unidad",
+        hint:"Crítico para inhibidores de parafinas e incrustaciones."},
+      {id:"temp_sep",      type:"text",  label:"Temperatura en separadores / superficie (°C)", ph:"Ej: 65°C"},
+      {id:"num_pozos",     type:"text",  label:"Número de pozos productores activos", ph:"Ej: 45 pozos"},
+    ]
+  },
+  {
+    emoji:"🏗️", title:"Infraestructura",
+    sub:"Equipos y sistemas instalados en el campo",
+    fields:[
+      {id:"separadores",   type:"check", label:"Tipos de separadores presentes", req:true,
+        opts:["Separador bifásico (gas-líquido)","Separador trifásico (gas-aceite-agua)","Tratador electrostático","FWKO — Free Water Knock-Out","Skimmer / Separador de flotación","Treater horizontal","Gun barrel / gun tank","No hay separadores instalados aún"]},
+      {id:"cap_sep",       type:"text",  label:"Capacidad total de separación (BFPD)", ph:"Barriles de fluido por día, total instalado"},
+      {id:"inyeccion",     type:"check", label:"Sistemas de inyección química existentes",
+        opts:["Inyección continua downhole (capilar)","Inyección continua en cabezal de pozo","Inyección en línea de flujo","Inyección en manifold / macolla","Solo bacheo manual","Ningún sistema instalado"]},
+      {id:"agua_trat",     type:"check", label:"Tratamiento de agua producida",
+        opts:["Reinyección al yacimiento (WI / SWD)","Clarificadores / Flotadores DAF","Filtros (arena, multimedia, membranas)","Lagunas de tratamiento","Desalador","No existe tratamiento instalado"]},
+      {id:"almac_crudo",   type:"text",  label:"Capacidad de almacenamiento de crudo (Barriles)", ph:"Ej: 2 tanques × 10,000 = 20,000 bls"},
+      {id:"gas_trat",      type:"check", label:"Manejo de gas asociado",
+        opts:["Planta de gas / Compresión","Planta de TEG (deshidratación)","Unidad de endulzamiento H₂S/CO₂","Quema en antorcha","Reinyección de gas al yacimiento","No hay gas asociado significativo"]},
+      {id:"calderas",      type:"radio", label:"Calderas / Generación de vapor",
+        opts:["Sí — calderas industriales para vapor","Sí — inyección de vapor al yacimiento (EOR)","No","En proyecto / planificado"]},
+    ]
+  },
+  {
+    emoji:"⚠️", title:"Diagnóstico de Problemas",
+    sub:"Problemas operacionales que afectan la producción actualmente",
+    fields:[
+      {id:"problemas",     type:"check", label:"Problemas que experimenta actualmente", req:true,
+        opts:["Emulsiones estables / dificultad en separación","Depósitos de asfaltenos","Depósitos de parafinas / ceras","Corrosión en tuberías o equipos de superficie","Corrosión downhole","H₂S fuera de especificación","Incrustaciones (scale)","Espuma en separadores o equipos","Alta viscosidad del crudo","Bacterias sulfato-reductoras (BSR) en agua","Hidratos en líneas de gas","Agua de inyección fuera de especificación","Ninguno de los anteriores"]},
+      {id:"emulsion_sev",  type:"radio", label:"Severidad de las emulsiones",
+        opts:["Leve — se separa con tiempo o temperatura","Moderada — responde bien a química","Severa — emulsiones estables difíciles de romper","Crítica — BSW >80% con emulsión estable","No tenemos problemas de emulsión"]},
+      {id:"asfaltenos_loc",type:"text",  label:"Localización de depósitos de asfaltenos", ph:'Ej: tubería 4", válvulas cabezal, separador de entrada…'},
+      {id:"parafinas_wat", type:"text",  label:"Temperatura de aparición de ceras / WAT", ph:"Ej: 45°C  ·  o 'No medida'"},
+      {id:"corrosion_amb", type:"check", label:"Tipo de ambiente corrosivo",
+        opts:["CO₂ (sweet corrosion)","H₂S (sour service)","O₂ disuelto en agua de inyección","Ácido nafténico (TAN alto)","Erosión-corrosión (alta velocidad)","Microbiológica (MIC)","Sin problemas de corrosión identificados"]},
+      {id:"h2s_medido",    type:"text",  label:"Concentración de H₂S medida (ppm — especificar corriente)", ph:"Ej: 2,000 ppm en gas  /  500 ppm en crudo"},
+      {id:"scale_tipo",    type:"check", label:"Tipo de incrustaciones identificadas",
+        opts:["CaCO₃ — Carbonato de calcio","BaSO₄ — Sulfato de bario","SrSO₄ — Sulfato de estroncio","FeS — Sulfuro de hierro","SiO₂ — Sílice","Tipo no identificado aún","Sin problemas de incrustaciones"]},
+      {id:"espuma_equip",  type:"check", label:"Equipos donde ocurre la espuma",
+        opts:["Separador bifásico","Separador trifásico","Tratador electrostático","Tanques de almacenamiento","Planta de gas / compresión","Planta de aminas","No hay problemas de espuma"]},
+      {id:"problema_critico", type:"textarea", label:"Problema operacional más crítico — descripción libre",
+        ph:"Frecuencia, impacto en producción (BOPD perdidos), costos asociados, intentos previos de solución…"},
+    ]
+  },
+  {
+    emoji:"🧪", title:"Programa Químico Actual",
+    sub:"Proveedores y productos en uso actualmente",
+    fields:[
+      {id:"tiene_quimico", type:"radio", label:"¿El campo tiene un programa de tratamiento químico activo?", req:true,
+        opts:["Sí — programa completo y activo","Sí — parcial (solo algunos químicos)","No — no hay tratamiento químico activo","En proceso de licitación / búsqueda de proveedor"]},
+      {id:"quim_uso",      type:"check", label:"Productos químicos en uso actualmente",
+        opts:["Demulsificante","Inhibidor de corrosión","Inhibidor de asfaltenos","Inhibidor de parafinas / PPD","Secuestrante de H₂S","Inhibidor de incrustaciones","Biocida","Antiespumante","Reductor de viscosidad / DRA","Tratamiento de agua (coagulantes, floculantes)","Glicol (MEG/TEG)","Otros"]},
+      {id:"proveedor_act", type:"text",  label:"Proveedor(es) actual(es)", ph:"Nombre de la empresa que suministra los químicos"},
+      {id:"consumo_mes",   type:"text",  label:"Consumo mensual estimado", ph:"Ej: 50 tambores/mes  ·  o ~$30,000 USD/mes"},
+      {id:"satisfaccion",  type:"radio", label:"Nivel de satisfacción con el programa actual",
+        opts:["Muy satisfecho — programa funciona bien","Satisfecho — hay oportunidades de mejora","Insatisfecho — los químicos no resuelven el problema","Muy insatisfecho — considerando cambio inminente","No aplica — no hay proveedor actual"]},
+      {id:"razon_cambio",  type:"check", label:"Si considera cambiar proveedor: ¿cuál es el motivo?",
+        opts:["Precio / costo demasiado alto","Desempeño técnico insuficiente","Problemas de suministro / disponibilidad","Falta de soporte técnico en campo","Producto no disponible en Venezuela","Requisito de proveedor nacional (VAN)","Cambio en condiciones del campo","No estamos considerando cambios"]},
+    ]
+  },
+  {
+    emoji:"📋", title:"Requerimientos & Expectativas",
+    sub:"Alcance del servicio deseado y tipo de contratación",
+    fields:[
+      {id:"tipo_servicio", type:"check", label:"¿Qué servicios requiere de SSP SLON?", req:true,
+        opts:["Suministro de químicos (solo productos, sin servicio técnico)","Servicio integral (productos + ingeniería + monitoreo en campo)","Evaluación técnica / prueba piloto antes de contrato","Laboratorio de campo (análisis de muestras in-situ)","Diseño e instalación de sistemas de inyección química","Estimulación matricial de pozos (tratamientos por bache)","Ingeniería de procesos (P&IDs, revisión de facilidades)","Automatización y monitoreo remoto (SCADA/PLC)","Tratamiento de cargas (cargo treatment — exportación)","Consultoría técnica / asesoría"]},
+      {id:"tipo_contrato", type:"radio", label:"Tipo de contrato preferido",
+        opts:["Orden de compra directa (spot)","Contrato marco anual con órdenes mensuales","Licitación formal (proceso competitivo)","Contrato de servicio integral largo plazo (2+ años)","Aún no está definido"]},
+      {id:"fecha_inicio",  type:"text",  label:"Fecha estimada de inicio del programa", ph:"Ej: Enero 2026  ·  o 'Inmediato'"},
+      {id:"presupuesto",   type:"radio", label:"Presupuesto mensual estimado (USD/mes)",
+        opts:["Menos de $10,000","$10,000 – $50,000","$50,000 – $150,000","$150,000 – $500,000","Más de $500,000 (campo grande)","No definido todavía","Prefiero no indicarlo"]},
+      {id:"monitoreo",     type:"radio", label:"¿Requiere monitoreo y reporte técnico periódico?",
+        opts:["Sí — reporte mensual con KPIs técnicos y de consumo","Sí — reporte semanal (campo de alta prioridad)","Solo en caso de incidente o cambio de condiciones","No es requerimiento del contrato"]},
+      {id:"laboratorio",   type:"radio", label:"¿Requiere laboratorio de campo?",
+        opts:["Sí — laboratorio permanente en campo","Sí — visitas periódicas con equipo móvil","Solo para pruebas de botella / selección de producto","No requerido"]},
+    ]
+  },
+  {
+    emoji:"📎", title:"Información Complementaria",
+    sub:"Datos técnicos adicionales y observaciones finales",
+    fields:[
+      {id:"analisis_agua", type:"textarea", label:"Análisis de agua producida (opcional)",
+        ph:"TDS, Cl⁻, SO₄²⁻, Ca²⁺, Mg²⁺, Ba²⁺, Fe total, pH, temperatura…\nSi no dispone, dejar en blanco.",
+        hint:"Permite calcular índices de incrustaciones y dimensionar inhibidores con precisión."},
+      {id:"analisis_crudo",type:"textarea", label:"Análisis de crudo disponible (opcional)",
+        ph:"SARA, viscosidad, densidad, TAN, wax content…\nSi no dispone, dejar en blanco."},
+      {id:"observaciones", type:"textarea", label:"Observaciones adicionales para el equipo técnico de SSP SLON",
+        ph:"Antecedentes del campo, restricciones operacionales, requisitos especiales, experiencias previas con químicos, cualquier información que considere relevante…"},
+      {id:"como_conocio",  type:"radio",    label:"¿Cómo conoció a SSP SLON DE VENEZUELA?",
+        opts:["Referido por colega o conocido","PDVSA / proceso de licitación","Sitio web / redes sociales","Visita comercial del equipo SSP SLON","Experiencia previa con GEODS DE VENEZUELA","Evento / conferencia técnica","Otro"]},
+    ]
+  },
+];
+
+/* ─── State ──────────────────────────────────────────────── */
+let current = 0;
+const answers = {};
+
+/* ─── Build DOM ───────────────────────────────────────────── */
+function buildUI() {
+  buildProgressBar();
+  buildPills();
+  buildSections();
+  renderCurrent();
+}
+
+function buildProgressBar() {
+  const t = document.getElementById('progTrack');
+  SECTIONS.forEach((_, i) => {
+    const seg = document.createElement('div');
+    seg.className = 'prog-seg';
+    seg.id = `ps${i}`;
+    t.appendChild(seg);
+  });
+}
+
+function buildPills() {
+  const c = document.getElementById('pillsInner');
+  SECTIONS.forEach((s, i) => {
+    const pill = document.createElement('button');
+    pill.id = `pill${i}`;
+    pill.className = 'pill';
+    pill.innerHTML = `<span class="pill-dot"></span>${s.emoji} ${s.title}`;
+    pill.onclick = () => goto(i);
+    c.appendChild(pill);
+  });
+}
+
+function buildSections() {
+  const body = document.getElementById('formBody');
+  SECTIONS.forEach((sec, si) => {
+    const panel = document.createElement('div');
+    panel.id = `sec${si}`;
+    panel.style.display = 'none';
+
+    const secBody = document.createElement('div');
+    secBody.className = 'sec-body';
+
+    // Section header
+    secBody.innerHTML = `
+      <div class="sec-head">
+        <span class="sec-emoji">${sec.emoji}</span>
+        <div>
+          <div class="sec-num">Sección ${si+1} de ${SECTIONS.length}</div>
+          <div class="sec-title">${sec.title}</div>
+          <div class="sec-sub">${sec.sub}</div>
+        </div>
+      </div>
+      <div class="hint-bar">
+        <span>💡</span>
+        <span>Los campos con <span style="color:var(--red)">●</span> son obligatorios. Si no conoce el dato exacto, use el mejor estimado disponible.</span>
+      </div>
+    `;
+
+    const card = document.createElement('div');
+    card.className = 'fields-card';
+
+    sec.fields.forEach(f => {
+      const fld = document.createElement('div');
+      fld.className = 'field';
+
+      const lbl = `<div class="field-lbl">${f.req?'<span class="req"></span>':''}${f.label}</div>`;
+      const hint = f.hint ? `<div class="field-hint">${f.hint}</div>` : '';
+      let inp = '';
+
+      if (f.type === 'text' || f.type === 'email' || f.type === 'tel') {
+        inp = `<input type="${f.type}" id="f_${f.id}" placeholder="${f.ph||''}" autocomplete="off" 
+               oninput="setVal('${f.id}',this.value)">`;
+      } else if (f.type === 'textarea') {
+        inp = `<textarea id="f_${f.id}" placeholder="${f.ph||''}" 
+               oninput="setVal('${f.id}',this.value)"></textarea>`;
+      } else if (f.type === 'radio' || f.type === 'check') {
+        inp = `<div class="opts-list" id="opts_${f.id}">${
+          f.opts.map(o => `
+            <div class="opt" onclick="toggleOpt('${f.id}','${o.replace(/'/g,"\\'")}','${f.type}')" data-v="${o.replace(/"/g,'&quot;')}">
+              <div class="opt-box${f.type==='radio'?' circle':''}">
+                ${f.type==='check'?'<span class="opt-check">✓</span>':'<div class="opt-radio-dot"></div>'}
+              </div>
+              <span class="opt-txt">${o}</span>
+            </div>`).join('')
+        }</div>`;
+      }
+
+      fld.innerHTML = lbl + hint + inp;
+      card.appendChild(fld);
+    });
+
+    secBody.appendChild(card);
+    panel.appendChild(secBody);
+    body.appendChild(panel);
+  });
+}
+
+/* ─── Navigation ─────────────────────────────────────────── */
+function goto(idx) {
+  current = Math.max(0, Math.min(idx, SECTIONS.length-1));
+  renderCurrent();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function nextSec() {
+  if (!validateSection()) return;
+  if (current === SECTIONS.length-1) { submitForm(); return; }
+  goto(current+1);
+}
+
+function prevSec() { goto(current-1); }
+
+function renderCurrent() {
+  // Panels
+  SECTIONS.forEach((_, i) => {
+    document.getElementById(`sec${i}`).style.display = i===current ? 'block' : 'none';
+  });
+
+  // Progress segments
+  SECTIONS.forEach((_, i) => {
+    const seg = document.getElementById(`ps${i}`);
+    seg.className = 'prog-seg' + (i<current?' done':i===current?' active':'');
+  });
+
+  // Pills
+  SECTIONS.forEach((_, i) => {
+    const p = document.getElementById(`pill${i}`);
+    const done = i<current && isSectionFilled(i);
+    p.className = 'pill' + (i===current?' active':done?' done':'');
+  });
+
+  // Label
+  document.getElementById('progLabel').textContent = `${current+1} / ${SECTIONS.length}`;
+
+  // Buttons
+  const prev = document.getElementById('btnPrev');
+  const next = document.getElementById('btnNext');
+  prev.style.display = current > 0 ? 'block' : 'none';
+  const isLast = current === SECTIONS.length-1;
+  next.className = 'btn ' + (isLast ? 'btn-submit' : 'btn-next');
+  next.textContent = isLast ? '✅  Enviar Diagnóstico' : 'Siguiente →';
+
+  // Scroll pill into view
+  const pill = document.getElementById(`pill${current}`);
+  if (pill) pill.scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
+}
+
+/* ─── Answers ────────────────────────────────────────────── */
+function setVal(id, val) { answers[id] = val; }
+
+function toggleOpt(id, val, type) {
+  if (type === 'radio') {
+    answers[id] = val;
+    document.querySelectorAll(`#opts_${id} .opt`).forEach(el => {
+      el.classList.toggle('sel', el.dataset.v === val);
+    });
+  } else {
+    const current_arr = answers[id] || [];
+    const idx = current_arr.indexOf(val);
+    if (idx > -1) current_arr.splice(idx, 1);
+    else current_arr.push(val);
+    answers[id] = current_arr;
+    document.querySelectorAll(`#opts_${id} .opt`).forEach(el => {
+      el.classList.toggle('sel', current_arr.includes(el.dataset.v));
+    });
+  }
+}
+
+function isSectionFilled(idx) {
+  const sec = SECTIONS[idx];
+  return sec.fields.filter(f=>f.req).every(f => {
+    const v = answers[f.id];
+    if (f.type==='check') return v && v.length > 0;
+    return v && String(v).trim().length > 0;
+  });
+}
+
+/* ─── Validation ─────────────────────────────────────────── */
+function validateSection() {
+  const sec = SECTIONS[current];
+  const req = sec.fields.filter(f => f.req);
+  for (const f of req) {
+    const v = answers[f.id];
+    const empty = !v || (Array.isArray(v) ? v.length===0 : String(v).trim()==='');
+    if (empty) {
+      showToast(`⚠️ "${f.label}" es obligatorio`);
+      // Scroll to field
+      const el = document.getElementById(`f_${f.id}`) || document.getElementById(`opts_${f.id}`);
+      if (el) el.scrollIntoView({behavior:'smooth', block:'center'});
+      return false;
+    }
+  }
+  return true;
+}
+
+function showToast(msg) {
+  let t = document.querySelector('.toast');
+  if (t) t.remove();
+  t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t && t.remove(), 3200);
+}
+
+/* ─── Submit ─────────────────────────────────────────────── */
+async function submitForm() {
+  if (!validateSection()) return;
+
+  document.getElementById('overlay').style.display = 'flex';
+  document.getElementById('navBar').style.display = 'none';
+
+  // Flatten answers to simple object with string values
+  const payload = {};
+  SECTIONS.forEach(sec => {
+    sec.fields.forEach(f => {
+      const v = answers[f.id];
+      if (v !== undefined && v !== null && v !== '') {
+        payload[f.label] = Array.isArray(v) ? v.join(' | ') : String(v);
+      }
+    });
+  });
+
+  // Add metadata
+  payload['_fecha_envio'] = new Date().toLocaleString('es-VE', {timeZone:'America/Caracas'});
+  payload['_empresa']  = answers['empresa'] || '';
+  payload['_contacto'] = answers['contacto'] || '';
+  payload['_email']    = answers['email'] || '';
+  payload['_urgencia'] = answers['urgencia'] || '';
+
+  try {
+    if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL === 'PEGAR_AQUI_LA_URL_DE_TU_WEB_APP') {
+      // Demo mode — simulate success
+      await new Promise(r => setTimeout(r, 1500));
+    } else {
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload)
+      });
+    }
+    showSuccess();
+  } catch (err) {
+    document.getElementById('overlay').style.display = 'none';
+    document.getElementById('navBar').style.display = 'block';
+    showToast('❌ Error al enviar. Intente de nuevo o escriba a info@sspslon.com');
+  }
+}
+
+function showSuccess() {
+  document.getElementById('overlay').style.display = 'none';
+  document.getElementById('formBody').style.display = 'none';
+  document.getElementById('navBar').style.display = 'none';
+  document.querySelector('.pills-track').style.display = 'none';
+
+  const s = document.getElementById('successScreen');
+  s.classList.add('show');
+
+  const nombre = answers['contacto'] || '';
+  const empresa = answers['empresa'] || '';
+  document.getElementById('contactoNombre').textContent =
+    nombre ? `${nombre} — ${empresa}` : empresa;
+
+  // Mark all prog segs done
+  SECTIONS.forEach((_, i) => {
+    document.getElementById(`ps${i}`).className = 'prog-seg done';
+  });
+  document.getElementById('progLabel').textContent = '✓ Enviado';
+}
+
+/* ─── Init ───────────────────────────────────────────────── */
+buildUI();
+</script>
+</body>
+</html>
