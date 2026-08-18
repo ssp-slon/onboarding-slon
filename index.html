@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Diagnóstico Técnico de Cliente · SSP SLON DE VENEZUELA</title>
+<title>Diagnóstico Técnico de Cliente · SSP SLON</title>
 
 <!-- ═══════════════════════════════════════════════════════════
      CONFIGURACIÓN  ←  EDITAR ANTES DE PUBLICAR
@@ -61,6 +61,27 @@ body {
 }
 
 /* ── Top Bar ──────────────────────────────────────────── */
+.lang-switch{display:flex;border:1px solid rgba(255,255,255,.2);border-radius:4px;
+  overflow:hidden;position:absolute;right:14px;top:12px;z-index:5}
+.lang-switch button{background:none;border:none;cursor:pointer;color:#8B95A1;
+  font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;
+  letter-spacing:.1em;padding:7px 10px;min-height:34px;transition:all .2s}
+.lang-switch button.on{background:var(--red);color:#fff}
+.lang-switch button:not(.on):hover{color:#fff}
+.site-links{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:6px}
+.site-links a{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:13px;
+  letter-spacing:.1em;text-transform:uppercase;color:#8B95A1;text-decoration:none;
+  border-bottom:1px solid rgba(255,255,255,.14);padding-bottom:2px}
+.site-links a:hover{color:#fff}
+.legal-foot{text-align:center;padding:26px 16px 34px;border-top:1px solid rgba(255,255,255,.08);
+  margin-top:30px}
+.legal-foot p{font-size:12.5px;line-height:1.8;color:#8B95A1}
+.legal-foot a{color:#8B95A1;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.14)}
+.legal-foot a:hover{color:#fff}
+@media(max-width:520px){
+  .lang-switch{position:static;margin-left:auto;align-self:flex-start}
+  .lang-switch button{padding:6px 9px;font-size:11.5px;min-height:32px}
+}
 .topbar {
   position: sticky;
   top: 0;
@@ -70,7 +91,7 @@ body {
   padding: 16px 20px 14px;
   backdrop-filter: blur(8px);
 }
-.topbar-inner {
+.topbar-inner { position: relative;
   max-width: 800px;
   margin: 0 auto;
 }
@@ -540,13 +561,17 @@ textarea { resize: vertical; min-height: 95px; line-height: 1.55; }
     <div class="brand-row">
       <div class="logomark">SSP<br>SLON</div>
       <div class="brand-text">
-        <h1>SSP SLON DE VENEZUELA, C.A.</h1>
-        <p>Diagnóstico técnico de cliente</p>
+        <h1 data-t="brandline">SSP SLON</h1>
+        <p data-t="brandsub">Diagnóstico técnico de cliente</p>
       </div>
+    </div>
+    <div class="lang-switch" role="group" aria-label="Idioma / Language">
+      <button type="button" data-l="es" aria-label="Español">ES</button>
+      <button type="button" data-l="en" aria-label="English">EN</button>
     </div>
     <div class="progress-row">
       <div class="prog-track" id="progTrack"></div>
-      <span class="prog-label" id="progLabel">1 / 7</span>
+      <span class="prog-label" id="progLabel">1 / 8</span>
     </div>
   </div>
 </div>
@@ -581,6 +606,22 @@ textarea { resize: vertical; min-height: 95px; line-height: 1.55; }
     <div class="success-tagline">Fuerza · Seguridad · Solución</div>
   </div>
 
+  <div class="legal-foot">
+    <div class="site-links">
+      <a href="index.html" data-t="l_home">Inicio</a>
+      <a href="catalogo.html" data-t="l_cat">Catálogo</a>
+      <a href="mailto:info@sspslon.com" data-t="l_mail">Contacto</a>
+    </div>
+    <p style="margin-top:14px">
+      SSP SLON SOLUCIONES, C.A. &middot; RIF J-40309202-8<br>
+      Av. Ernesto Blohm con Av. La Estancia, Centro Profesional BANAVEN,<br>
+      Urb. Las Mercedes, Caracas 1061, Venezuela<br>
+      <a href="mailto:info@sspslon.com">info@sspslon.com</a> &middot;
+      <a href="https://www.sspslon.com">www.sspslon.com</a><br>
+      <span>&copy; <span id="yr">2026</span> <span data-t="rights">Todos los derechos reservados.</span></span>
+    </p>
+  </div>
+
 </div>
 
 <!-- ═══ BOTTOM NAV ═══ -->
@@ -601,14 +642,106 @@ textarea { resize: vertical; min-height: 95px; line-height: 1.55; }
      DATA & LOGIC
 ════════════════════════════════════════════════════════════ -->
 <script>
+
+/* ═══ i18n ═══════════════════════════════════════════════ */
+const I18N = {"Datos del Cliente": "Client Details", "Empresa operadora y contacto técnico responsable": "Operating company and responsible technical contact", "Empresa / Operadora": "Company / Operator", "Ej: PETROMONAGAS, PETROPIAR, PDVSA División Oriente…": "E.g. PETROMONAGAS, PETROPIAR, PDVSA Eastern Division…", "División / Campo / Macolla": "Division / Field / Well Pad", "Ej: División Oriente — Campo Maturín Norte": "E.g. Eastern Division — Maturín Norte Field", "Región operacional": "Operating region", "Faja del Orinoco — Bloque Boyacá": "Orinoco Belt — Boyacá Block", "Faja del Orinoco — Bloque Junín": "Orinoco Belt — Junín Block", "Faja del Orinoco — Bloque Ayacucho": "Orinoco Belt — Ayacucho Block", "Faja del Orinoco — Bloque Carabobo": "Orinoco Belt — Carabobo Block", "División Oriente — Edo. Monagas": "Eastern Division — Monagas State", "División Oriente — Edo. Anzoátegui": "Eastern Division — Anzoátegui State", "Cuenca del Lago de Maracaibo": "Lake Maracaibo Basin", "Costa Afuera / Offshore": "Offshore", "Otra región": "Other region", "Nombre del contacto técnico": "Technical contact name", "Cargo / Posición": "Role / Position", "Ej: Supervisor de Producción, Ing. de Fluidos…": "E.g. Production Supervisor, Fluids Engineer…", "Correo electrónico": "Email address", "nombre@empresa.com": "name@company.com", "Teléfono / WhatsApp": "Phone / WhatsApp", "+58-424-000-0000": "+58-424-000-0000", "Urgencia de la propuesta técnica": "Urgency of the technical proposal", "Urgente — menos de 1 semana": "Urgent — less than 1 week", "Normal — 2 a 4 semanas": "Normal — 2 to 4 weeks", "Exploración — sin plazo definido": "Exploratory — no defined deadline", "Licitación en proceso (especificar en observaciones)": "Tender in progress (specify in comments)", "Datos de Producción": "Production Data", "Parámetros técnicos del campo — base para el cálculo de volúmenes químicos": "Field technical parameters — the basis for chemical volume calculation", "Producción actual (BOPD)": "Current production (BOPD)", "Ej: 10,000": "E.g. 10,000", "Barriles de petróleo por día. Si el campo tiene varios pozos, indicar el total.": "Barrels of oil per day. If the field has several wells, give the total.", "Producción objetivo a 6 meses (BOPD)": "Target production at 6 months (BOPD)", "Ej: 12,500": "E.g. 12,500", "BSW — Corte de agua (%)": "BS&W — Water cut (%)", "Ej: 60": "E.g. 60", "Porcentaje del fluido producido que es agua. Rango típico Faja: 50–80%.": "Percentage of produced fluid that is water. Typical Orinoco Belt range: 50–80%.", "Tipo de crudo": "Crude type", "Liviano (>30° API)": "Light (>30° API)", "Mediano (20–30° API)": "Medium (20–30° API)", "Pesado (10–20° API)": "Heavy (10–20° API)", "Extrapesado (<10° API) — Faja Orinoco": "Extra-heavy (<10° API) — Orinoco Belt", "No lo sé / Sin información": "Unknown / No information", "Gravedad API del crudo": "Crude API gravity", "Ej: 8.5° API": "E.g. 8.5° API", "H₂S en el crudo (ppm)": "H₂S in crude (ppm)", "Ej: 500 ppm  ·  o escribir 0": "E.g. 500 ppm  ·  or enter 0", "CO₂ en gas asociado (% vol)": "CO₂ in associated gas (% vol)", "Ej: 3.5%  ·  o 'No medido'": "E.g. 3.5%  ·  or 'Not measured'", "Temperatura de fondo del pozo": "Bottomhole temperature", "Ej: 160°F o 71°C — indicar unidad": "E.g. 160°F or 71°C — state the unit", "Crítico para inhibidores de parafinas e incrustaciones.": "Critical for paraffin and scale inhibitors.", "Temperatura en separadores / superficie (°C)": "Separator / surface temperature (°C)", "Ej: 65°C": "E.g. 65°C", "Número de pozos productores activos": "Number of active producing wells", "Ej: 45 pozos": "E.g. 45 wells", "Infraestructura": "Infrastructure", "Equipos y sistemas instalados en el campo": "Equipment and systems installed in the field", "Tipos de separadores presentes": "Separator types present", "Separador bifásico (gas-líquido)": "Two-phase separator (gas-liquid)", "Separador trifásico (gas-aceite-agua)": "Three-phase separator (gas-oil-water)", "Tratador electrostático": "Electrostatic treater", "FWKO — Free Water Knock-Out": "FWKO — Free Water Knock-Out", "Skimmer / Separador de flotación": "Skimmer / Flotation separator", "Treater horizontal": "Horizontal treater", "Gun barrel / gun tank": "Gun barrel / gun tank", "No hay separadores instalados aún": "No separators installed yet", "Capacidad total de separación (BFPD)": "Total separation capacity (BFPD)", "Barriles de fluido por día, total instalado": "Barrels of fluid per day, total installed", "Sistemas de inyección química existentes": "Existing chemical injection systems", "Inyección continua downhole (capilar)": "Continuous downhole injection (capillary)", "Inyección continua en cabezal de pozo": "Continuous wellhead injection", "Inyección en línea de flujo": "Flowline injection", "Inyección en manifold / macolla": "Manifold / well pad injection", "Solo bacheo manual": "Manual batching only", "Ningún sistema instalado": "No system installed", "Tratamiento de agua producida": "Produced water treatment", "Reinyección al yacimiento (WI / SWD)": "Reservoir reinjection (WI / SWD)", "Clarificadores / Flotadores DAF": "Clarifiers / DAF units", "Filtros (arena, multimedia, membranas)": "Filters (sand, multimedia, membranes)", "Lagunas de tratamiento": "Treatment ponds", "Desalador": "Desalter", "No existe tratamiento instalado": "No treatment installed", "Capacidad de almacenamiento de crudo (Barriles)": "Crude storage capacity (barrels)", "Ej: 2 tanques × 10,000 = 20,000 bls": "E.g. 2 tanks × 10,000 = 20,000 bbl", "Manejo de gas asociado": "Associated gas handling", "Planta de gas / Compresión": "Gas plant / Compression", "Planta de TEG (deshidratación)": "TEG plant (dehydration)", "Unidad de endulzamiento H₂S/CO₂": "H₂S/CO₂ sweetening unit", "Quema en antorcha": "Flaring", "Reinyección de gas al yacimiento": "Gas reinjection to reservoir", "No hay gas asociado significativo": "No significant associated gas", "Calderas / Generación de vapor": "Boilers / Steam generation", "Sí — calderas industriales para vapor": "Yes — industrial steam boilers", "Sí — inyección de vapor al yacimiento (EOR)": "Yes — steam injection to reservoir (EOR)", "No": "No", "En proyecto / planificado": "Planned / in project", "Diagnóstico de Problemas": "Problem Diagnosis", "Problemas operacionales que afectan la producción actualmente": "Operational problems currently affecting production", "Problemas que experimenta actualmente": "Problems currently experienced", "Emulsiones estables / dificultad en separación": "Stable emulsions / separation difficulty", "Depósitos de asfaltenos": "Asphaltene deposits", "Depósitos de parafinas / ceras": "Paraffin / wax deposits", "Corrosión en tuberías o equipos de superficie": "Corrosion in surface piping or equipment", "Corrosión downhole": "Downhole corrosion", "H₂S fuera de especificación": "Off-spec H₂S", "Incrustaciones (scale)": "Scale", "Espuma en separadores o equipos": "Foam in separators or equipment", "Alta viscosidad del crudo": "High crude viscosity", "Bacterias sulfato-reductoras (BSR) en agua": "Sulphate-reducing bacteria (SRB) in water", "Hidratos en líneas de gas": "Hydrates in gas lines", "Agua de inyección fuera de especificación": "Off-spec injection water", "Ninguno de los anteriores": "None of the above", "Severidad de las emulsiones": "Emulsion severity", "Leve — se separa con tiempo o temperatura": "Mild — separates with time or temperature", "Moderada — responde bien a química": "Moderate — responds well to chemistry", "Severa — emulsiones estables difíciles de romper": "Severe — stable emulsions, hard to break", "Crítica — BSW >80% con emulsión estable": "Critical — BS&W >80% with stable emulsion", "No tenemos problemas de emulsión": "We have no emulsion problems", "Localización de depósitos de asfaltenos": "Location of asphaltene deposits", "Temperatura de aparición de ceras / WAT": "Wax appearance temperature / WAT", "Ej: 45°C  ·  o 'No medida'": "E.g. 45°C  ·  or 'Not measured'", "Tipo de ambiente corrosivo": "Type of corrosive environment", "CO₂ (sweet corrosion)": "CO₂ (sweet corrosion)", "H₂S (sour service)": "H₂S (sour service)", "O₂ disuelto en agua de inyección": "Dissolved O₂ in injection water", "Ácido nafténico (TAN alto)": "Naphthenic acid (high TAN)", "Erosión-corrosión (alta velocidad)": "Erosion-corrosion (high velocity)", "Microbiológica (MIC)": "Microbiologically influenced (MIC)", "Sin problemas de corrosión identificados": "No corrosion problems identified", "Concentración de H₂S medida (ppm — especificar corriente)": "Measured H₂S concentration (ppm — specify stream)", "Tipo de incrustaciones identificadas": "Type of scale identified", "CaCO₃ — Carbonato de calcio": "CaCO₃ — Calcium carbonate", "BaSO₄ — Sulfato de bario": "BaSO₄ — Barium sulphate", "SrSO₄ — Sulfato de estroncio": "SrSO₄ — Strontium sulphate", "FeS — Sulfuro de hierro": "FeS — Iron sulphide", "SiO₂ — Sílice": "SiO₂ — Silica", "Tipo no identificado aún": "Type not yet identified", "Sin problemas de incrustaciones": "No scale problems", "Equipos donde ocurre la espuma": "Equipment where foaming occurs", "Separador bifásico": "Two-phase separator", "Separador trifásico": "Three-phase separator", "Tanques de almacenamiento": "Storage tanks", "Planta de gas / compresión": "Gas plant / compression", "Planta de aminas": "Amine plant", "No hay problemas de espuma": "No foaming problems", "Ej: 2,000 ppm en gas  /  500 ppm en crudo": "E.g. 2,000 ppm in gas  /  500 ppm in crude", "Frecuencia, impacto en producción (BOPD perdidos), costos asociados, intentos previos de solución…": "Frequency, impact on production (BOPD lost), associated costs, previous attempts at a solution…", "Problema operacional más crítico — descripción libre": "Most critical operational problem — free description", "Perforación, Completación y Cementación": "Drilling, Completion and Cementing", "Solo si su operación incluye construcción de pozos — omita si no aplica": "Only if your operation involves well construction — skip if not applicable", "¿Su operación incluye perforación, completación o cementación de pozos?": "Does your operation involve well drilling, completion or cementing?", "Sí — programa activo de perforación": "Yes — active drilling programme", "Sí — completación y reacondicionamiento (workover)": "Yes — completion and workover", "Sí — solo cementación / squeeze": "Yes — cementing / squeeze only", "En planificación para los próximos 12 meses": "Planned for the next 12 months", "No aplica — solo producción y superficie": "Not applicable — production and surface only", "Pozos previstos en los próximos 12 meses": "Wells planned in the next 12 months", "Ej: 12 pozos nuevos + 8 workover": "E.g. 12 new wells + 8 workovers", "Tipo de pozo": "Well type", "Vertical": "Vertical", "Direccional": "Directional", "Horizontal": "Horizontal", "Multilateral": "Multilateral", "Reentrada / sidetrack": "Re-entry / sidetrack", "Inyector": "Injector", "Profundidad típica (pies o metros)": "Typical depth (feet or metres)", "Ej: 9,500 ft TVD — indicar unidad": "E.g. 9,500 ft TVD — state the unit", "Sistema de fluido de perforación en uso": "Drilling fluid system in use", "Base agua (WBM) — polímero": "Water-based (WBM) — polymer", "Base agua (WBM) — inhibido con KCl": "Water-based (WBM) — KCl inhibited", "Base aceite (OBM) / emulsión inversa": "Oil-based (OBM) / invert emulsion", "Base sintética (SBM)": "Synthetic-based (SBM)", "Aire / espuma": "Air / foam", "Aún no definido": "Not yet defined", "Problemas durante la construcción del pozo": "Problems during well construction", "Embolamiento de mecha (bit balling)": "Bit balling", "Inestabilidad de lutitas / derrumbes": "Shale instability / washouts", "Torque y arrastre elevados": "High torque and drag", "Tubería pegada (diferencial o mecánica)": "Stuck pipe (differential or mechanical)", "Pérdida de circulación": "Lost circulation", "Filtrado excesivo a alta temperatura": "Excessive filtration at high temperature", "Canalización en la cementación": "Channelling during cementing", "Migración de gas anular": "Annular gas migration", "Daño de formación en completación": "Formation damage during completion", "Ninguno relevante": "None relevant", "Temperatura estática de fondo (BHST)": "Bottomhole static temperature (BHST)", "Ej: 280 °F — crítico para retardadores y control de filtrado": "E.g. 280 °F — critical for retarders and fluid-loss control", "Requerimientos de cementación": "Cementing requirements", "Cemento API Clase G": "API Class G cement", "Lechada liviana / espumada": "Lightweight / foamed slurry", "Sistema resistente a CO₂ / H₂S (servicio amargo)": "CO₂ / H₂S resistant system (sour service)", "Microcemento para squeeze o microanulares": "Microcement for squeeze or microannuli", "Espaciadores y lavadores químicos": "Spacers and chemical washes", "Control de migración de gas": "Gas migration control", "No requiere cementación": "No cementing required", "Fluidos de completación requeridos": "Completion fluids required", "Salmuera sin sólidos (filtrada)": "Solids-free brine (filtered)", "Píldoras viscosas": "Viscous pills", "Fluido de empaque (packer fluid)": "Packer fluid", "Estimulación matricial post-completación": "Post-completion matrix stimulation", "No requiere": "Not required", "Observaciones sobre el programa de pozos": "Comments on the well programme", "Contratista de taladro, cementadora, programa de revestidores, restricciones operacionales…": "Rig contractor, cementing company, casing programme, operational constraints…", "Programa Químico Actual": "Current Chemical Programme", "Proveedores y productos en uso actualmente": "Suppliers and products currently in use", "¿El campo tiene un programa de tratamiento químico activo?": "Does the field have an active chemical treatment programme?", "Sí — programa completo y activo": "Yes — complete and active programme", "Sí — parcial (solo algunos químicos)": "Yes — partial (only some chemicals)", "No — no hay tratamiento químico activo": "No — no active chemical treatment", "En proceso de licitación / búsqueda de proveedor": "Tendering / searching for a supplier", "Productos químicos en uso actualmente": "Chemical products currently in use", "Demulsificante": "Demulsifier", "Inhibidor de corrosión": "Corrosion inhibitor", "Inhibidor de asfaltenos": "Asphaltene inhibitor", "Inhibidor de parafinas / PPD": "Paraffin inhibitor / PPD", "Secuestrante de H₂S": "H₂S scavenger", "Inhibidor de incrustaciones": "Scale inhibitor", "Biocida": "Biocide", "Antiespumante": "Antifoam", "Reductor de viscosidad / DRA": "Viscosity reducer / DRA", "Tratamiento de agua (coagulantes, floculantes)": "Water treatment (coagulants, flocculants)", "Glicol (MEG/TEG)": "Glycol (MEG/TEG)", "Otros": "Others", "Proveedor(es) actual(es)": "Current supplier(s)", "Nombre de la empresa que suministra los químicos": "Name of the company supplying the chemicals", "Consumo mensual estimado": "Estimated monthly consumption", "Ej: 50 tambores/mes  ·  o ~$30,000 USD/mes": "E.g. 50 drums/month  ·  or ~US$30,000/month", "Nivel de satisfacción con el programa actual": "Satisfaction with the current programme", "Muy satisfecho — programa funciona bien": "Very satisfied — the programme works well", "Satisfecho — hay oportunidades de mejora": "Satisfied — there is room for improvement", "Insatisfecho — los químicos no resuelven el problema": "Dissatisfied — the chemicals do not solve the problem", "Muy insatisfecho — considerando cambio inminente": "Very dissatisfied — considering an imminent change", "No aplica — no hay proveedor actual": "Not applicable — no current supplier", "Si considera cambiar proveedor: ¿cuál es el motivo?": "If you are considering changing supplier, what is the reason?", "Precio / costo demasiado alto": "Price / cost too high", "Desempeño técnico insuficiente": "Insufficient technical performance", "Problemas de suministro / disponibilidad": "Supply / availability problems", "Falta de soporte técnico en campo": "Lack of field technical support", "Producto no disponible en Venezuela": "Product not available in Venezuela", "Requisito de proveedor nacional (VAN)": "National supplier requirement (VAN)", "Cambio en condiciones del campo": "Change in field conditions", "No estamos considerando cambios": "We are not considering changes", "Requerimientos & Expectativas": "Requirements & Expectations", "Alcance del servicio deseado y tipo de contratación": "Desired service scope and type of contract", "¿Qué servicios requiere de SSP SLON?": "Which services do you require from SSP SLON?", "Suministro de químicos (solo productos, sin servicio técnico)": "Chemical supply (products only, no technical service)", "Servicio integral (productos + ingeniería + monitoreo en campo)": "Integrated service (products + engineering + field monitoring)", "Evaluación técnica / prueba piloto antes de contrato": "Technical evaluation / pilot test before contract", "Laboratorio de campo (análisis de muestras in-situ)": "Field laboratory (on-site sample analysis)", "Diseño e instalación de sistemas de inyección química": "Design and installation of chemical injection systems", "Estimulación matricial de pozos (tratamientos por bache)": "Well matrix stimulation (batch treatments)", "Ingeniería de procesos (P&IDs, revisión de facilidades)": "Process engineering (P&IDs, facility review)", "Automatización y monitoreo remoto (SCADA/PLC)": "Automation and remote monitoring (SCADA/PLC)", "Tratamiento de cargas (cargo treatment — exportación)": "Cargo treatment (export)", "Consultoría técnica / asesoría": "Technical consultancy / advisory", "Tipo de contrato preferido": "Preferred contract type", "Orden de compra directa (spot)": "Direct purchase order (spot)", "Contrato marco anual con órdenes mensuales": "Annual framework contract with monthly orders", "Licitación formal (proceso competitivo)": "Formal tender (competitive process)", "Contrato de servicio integral largo plazo (2+ años)": "Long-term integrated service contract (2+ years)", "Aún no está definido": "Not yet defined", "Fecha estimada de inicio del programa": "Estimated programme start date", "Ej: Enero 2026  ·  o 'Inmediato'": "E.g. January 2026  ·  or 'Immediate'", "Presupuesto mensual estimado (USD/mes)": "Estimated monthly budget (US$/month)", "Menos de $10,000": "Less than US$10,000", "$10,000 – $50,000": "US$10,000 – US$50,000", "$50,000 – $150,000": "US$50,000 – US$150,000", "$150,000 – $500,000": "US$150,000 – US$500,000", "Más de $500,000 (campo grande)": "More than US$500,000 (large field)", "No definido todavía": "Not yet defined", "Prefiero no indicarlo": "Prefer not to say", "¿Requiere monitoreo y reporte técnico periódico?": "Do you require periodic technical monitoring and reporting?", "Sí — reporte mensual con KPIs técnicos y de consumo": "Yes — monthly report with technical and consumption KPIs", "Sí — reporte semanal (campo de alta prioridad)": "Yes — weekly report (high-priority field)", "Solo en caso de incidente o cambio de condiciones": "Only in case of incident or change of conditions", "No es requerimiento del contrato": "Not a contract requirement", "¿Requiere laboratorio de campo?": "Do you require a field laboratory?", "Sí — laboratorio permanente en campo": "Yes — permanent field laboratory", "Sí — visitas periódicas con equipo móvil": "Yes — periodic visits with mobile equipment", "Solo para pruebas de botella / selección de producto": "Only for bottle testing / product selection", "No requerido": "Not required", "Información Complementaria": "Additional Information", "Datos técnicos adicionales y observaciones finales": "Additional technical data and final comments", "Análisis de agua producida (opcional)": "Produced water analysis (optional)", "TDS, Cl⁻, SO₄²⁻, Ca²⁺, Mg²⁺, Ba²⁺, Fe total, pH, temperatura…\\nSi no dispone, dejar en blanco.": "TDS, Cl⁻, SO₄²⁻, Ca²⁺, Mg²⁺, Ba²⁺, total Fe, pH, temperature…\\nLeave blank if unavailable.", "Permite calcular índices de incrustaciones y dimensionar inhibidores con precisión.": "Allows scaling indices to be calculated and inhibitors to be sized accurately.", "Análisis de crudo disponible (opcional)": "Crude analysis available (optional)", "SARA, viscosidad, densidad, TAN, wax content…\\nSi no dispone, dejar en blanco.": "SARA, viscosity, density, TAN, wax content…\\nLeave blank if unavailable.", "Observaciones adicionales para el equipo técnico de SSP SLON": "Additional comments for the SSP SLON technical team", "Antecedentes del campo, restricciones operacionales, requisitos especiales, experiencias previas con químicos, cualquier información que considere relevante…": "Field background, operational constraints, special requirements, previous experience with chemicals, any information you consider relevant…", "¿Cómo conoció a SSP SLON?": "How did you hear about SSP SLON?", "Referido por colega o conocido": "Referred by a colleague or acquaintance", "PDVSA / proceso de licitación": "PDVSA / tender process", "Sitio web / redes sociales": "Website / social media", "Visita comercial del equipo SSP SLON": "Commercial visit from the SSP SLON team", "Evento / conferencia técnica": "Event / technical conference", "Otro": "Other", "Tipo de Solicitud": "Type of Request", "Perfil de la Empresa": "Company Profile", "Productos de Interés": "Products of Interest", "Aplicación y Condiciones": "Application and Conditions", "Condiciones Comerciales": "Commercial Terms", "Seleccione el escenario que corresponde a su empresa — el cuestionario se adapta a su respuesta": "Select the scenario that matches your company — the questionnaire adapts to your answer", "Sector, rol en la cadena y condición como proveedor": "Sector, role in the chain and supplier status", "Qué líneas del catálogo requiere y en qué volumen": "Which catalogue lines you require and in what volume", "Dónde se usará el producto — determina la recomendación técnica y la dosificación": "Where the product will be used — this determines the technical recommendation and dosage", "Entrega, contratación y requisitos documentales": "Delivery, contracting and documentation requirements", "¿Qué necesita de SSP SLON?": "What do you need from SSP SLON?", "Si es una operadora con campos activos, el cuestionario técnico permite dimensionar el tratamiento. Si solo requiere comprar producto, el formulario es más corto.": "If you are an operator with active fields, the technical questionnaire allows the treatment to be sized. If you only need to purchase product, the form is shorter.", "Tratamiento químico para mi campo o pozos — requiero evaluación técnica": "Chemical treatment for my field or wells — I need a technical evaluation", "Compra de productos del catálogo — mi empresa ya sabe qué necesita": "Purchase of catalogue products — my company already knows what it needs", "Compra de productos, pero requiero asesoría para seleccionarlos": "Purchase of products, but I need advice on selecting them", "División / Campo / Planta / Sede": "Division / Field / Plant / Site", "Ej: División Oriente — Campo Maturín Norte  ·  o  Planta Morón": "E.g. Eastern Division — Maturín Norte Field  ·  or  Morón Plant", "Sector de su empresa": "Your company's sector", "Operadora de petróleo y gas": "Oil and gas operator", "Empresa de servicios petroleros": "Oilfield services company", "Refinería o mejorador": "Refinery or upgrader", "Planta de proceso / petroquímica": "Process plant", "Industria manufacturera": "Manufacturing industry", "Generación eléctrica / termoeléctrica": "Power generation / thermoelectric", "Minería": "Mining", "Tratamiento de agua industrial": "Industrial water treatment", "Distribuidor o comercializador de químicos": "Chemical distributor or trader", "Otro sector": "Other sector", "Rol de su empresa en la compra": "Your company's role in the purchase", "Usuario final — consumimos el producto": "End user — we consume the product", "Contratista — aplicamos el producto a un tercero": "Contractor — we apply the product for a third party", "Distribuidor — revendemos el producto": "Distributor — we resell the product", "Compras corporativas para varias plantas": "Corporate procurement for several plants", "Ubicación de la planta o sitio de consumo": "Location of the plant or consumption site", "Ej: Complejo Morón, Edo. Carabobo  ·  o  Zona Industrial Maracaibo": "E.g. Morón Complex, Carabobo State  ·  or  Maracaibo Industrial Zone", "¿Requiere que SSP SLON se inscriba como proveedor en su sistema?": "Do you require SSP SLON to register as a supplier in your system?", "Sí — tenemos proceso formal de homologación de proveedores": "Yes — we have a formal supplier qualification process", "Sí — registro simple (RIF, referencias bancarias)": "Yes — simple registration (tax ID, bank references)", "No — compra directa sin registro previo": "No — direct purchase without prior registration", "No lo sé todavía": "I don't know yet", "RIF de la empresa compradora": "Buying company's tax ID", "Ej: J-12345678-9": "E.g. J-12345678-9", "Divisiones del catálogo que le interesan": "Catalogue divisions of interest", "Puede consultar el catálogo completo de 45 productos antes de responder. Si no sabe cuál corresponde, marque la aplicación y nuestro equipo recomienda el producto.": "You can review the full catalogue of 45 products before answering. If you are unsure which applies, indicate the application and our team will recommend the product.", "Producción, Aguas y Gas — demulsificantes, inhibidores, secuestrantes": "Production, Water & Gas — demulsifiers, inhibitors, scavengers", "Línea Comercial — corrosión, parafinas, completación, glicoles, resinas": "Commercial Line — corrosion, paraffins, completion, glycols, resins", "SLON PETROCHEM™ — plantas de proceso, calderas, torres de enfriamiento": "SLON PETROCHEM™ — process plants, boilers, cooling towers", "Materias primas e insumos químicos": "Raw materials and chemical inputs", "Aún no sé — requiero recomendación técnica": "Not sure yet — I need a technical recommendation", "Productos específicos requeridos": "Specific products required", "Ej: SLON BOLT™ — 10 tambores/mes\\nSLON PURE™ — 4 tambores/mes\\nMEG — 2 IBC/trimestre\\n\\nSi no conoce los nombres, describa la función que necesita.": "E.g. SLON BOLT™ — 10 drums/month\\nSLON PURE™ — 4 drums/month\\nMEG — 2 IBC/quarter\\n\\nIf you do not know the names, describe the function you need.", "Indique nombre del producto y cantidad estimada. Si no lo sabe, describa el problema y lo traducimos a producto.": "State the product name and estimated quantity. If you do not know it, describe the problem and we will translate it into a product.", "Volumen mensual estimado de compra": "Estimated monthly purchase volume", "Menos de 5 tambores/mes": "Fewer than 5 drums/month", "5 – 20 tambores/mes": "5 – 20 drums/month", "20 – 100 tambores/mes": "20 – 100 drums/month", "Más de 100 tambores/mes": "More than 100 drums/month", "Compra puntual, no recurrente": "One-off purchase, not recurring", "Aún por definir": "To be defined", "Presentación preferida": "Preferred packaging", "Tambor 200 L / 200 kg": "Drum 200 L / 200 kg", "IBC 1000 L / 1000 kg": "IBC 1000 L / 1000 kg", "Saco 25 kg": "25 kg sack", "Big bag 1000–1500 kg": "Big bag 1000–1500 kg", "Granel / cisterna": "Bulk / tanker", "Según disponibilidad": "As available", "Frecuencia de reposición": "Replenishment frequency", "Semanal": "Weekly", "Quincenal": "Fortnightly", "Mensual": "Monthly", "Trimestral": "Quarterly", "Compra única": "Single purchase", "Bajo demanda, sin patrón fijo": "On demand, no fixed pattern", "Sistema o proceso donde se aplicará": "System or process where it will be applied", "Producción de crudo — pozos y líneas": "Crude production — wells and flowlines", "Separación y tratamiento en superficie": "Surface separation and treatment", "Agua de inyección o producida": "Injection or produced water", "Torres de enfriamiento": "Cooling towers", "Calderas y generación de vapor": "Boilers and steam generation", "Tratamiento de gas": "Gas treatment", "Perforación o cementación de pozos": "Well drilling or cementing", "Tratamiento de efluentes": "Effluent treatment", "Almacenamiento y transporte": "Storage and transport", "Otro proceso industrial": "Other industrial process", "Problema o necesidad que busca resolver": "Problem or need you are seeking to solve", "Ej: incrustaciones en intercambiadores, crecimiento bacteriano en agua recirculada, corrosión en líneas de condensado…": "E.g. scaling in exchangers, bacterial growth in recirculated water, corrosion in condensate lines…", "Cuanto más concreto, mejor podemos recomendar producto y dosis.": "The more specific you are, the better we can recommend product and dosage.", "Condiciones del sistema (opcional)": "System conditions (optional)", "Temperatura, pH, dureza del agua, caudal, material de la tubería, presencia de H₂S o CO₂…": "Temperature, pH, water hardness, flow rate, pipe material, presence of H₂S or CO₂…", "¿Usa actualmente algún producto equivalente?": "Do you currently use an equivalent product?", "Sí — quiero comparar desempeño y precio": "Yes — I want to compare performance and price", "Sí — pero el proveedor no tiene disponibilidad": "Yes — but the supplier has no availability", "No — es una necesidad nueva": "No — this is a new requirement", "Estamos evaluando varias opciones": "We are evaluating several options", "Proveedor y producto actual (si aplica)": "Current supplier and product (if applicable)", "Nombre del proveedor y referencia del producto": "Supplier name and product reference", "¿Requiere muestra o prueba piloto antes de la compra?": "Do you require a sample or pilot test before purchase?", "Sí — muestra de laboratorio para evaluación": "Yes — laboratory sample for evaluation", "Sí — prueba piloto en planta": "Yes — pilot test at the plant", "No — compra directa": "No — direct purchase", "Depende de la propuesta": "Depends on the proposal", "Modalidad de entrega requerida": "Required delivery arrangement", "Entrega en nuestras instalaciones (puerta a puerta)": "Delivery to our facilities (door to door)", "Retiro en almacén de SSP SLON": "Collection from SSP SLON warehouse", "Entrega en almacén de un tercero": "Delivery to a third-party warehouse", "Por definir según cotización": "To be defined in the quotation", "Ciudad o estado de entrega": "Delivery city or state", "Ej: Punto Fijo, Edo. Falcón": "E.g. Punto Fijo, Falcón State", "Modalidad de contratación": "Contracting arrangement", "Orden de compra puntual": "One-off purchase order", "Contrato marco anual con órdenes periódicas": "Annual framework contract with periodic orders", "Licitación o concurso de precios": "Tender or price competition", "Acuerdo de distribución": "Distribution agreement", "Condiciones de pago previstas": "Expected payment terms", "Pago anticipado": "Advance payment", "Contra entrega": "On delivery", "Crédito 30 días": "30-day credit", "Crédito 60 días o más": "60-day credit or more", "Por negociar": "To be negotiated", "Documentación que su empresa requiere": "Documentation your company requires", "Todos nuestros productos cuentan con ficha técnica, hoja de seguridad, especificación de venta y etiqueta en español e inglés.": "All our products include a technical data sheet, safety data sheet, sales specification and label in Spanish and English.", "Ficha técnica (TDS)": "Technical data sheet (TDS)", "Hoja de seguridad (HDSM / SDS)": "Safety data sheet (SDS)", "Certificado de análisis por lote (COA)": "Certificate of analysis per batch (COA)", "Especificación de venta": "Sales specification", "Certificado de origen": "Certificate of origin", "Documentación para transporte de mercancía peligrosa": "Dangerous goods transport documentation", "Factura fiscal con IVA": "Tax invoice with VAT", "Plazo en que necesita el producto": "Timeframe in which you need the product", "Urgente — menos de 2 semanas": "Urgent — less than 2 weeks", "Un mes": "One month", "Dos a tres meses": "Two to three months", "Solo estamos cotizando para presupuesto": "We are only quoting for budget purposes"};
+const UI_T = {"Diagnóstico técnico de cliente": "Client technical assessment", "← Anterior": "← Previous", "Siguiente →": "Next →", "Enviando diagnóstico…": "Sending assessment…", "¡Diagnóstico Enviado!": "Assessment Sent!", "Fuerza · Seguridad · Solución": "Strength · Safety · Solution", "Inicio": "Home", "Catálogo": "Catalogue", "Contacto": "Contact", "Todos los derechos reservados.": "All rights reserved.", "Sección": "Section", "de": "of"};
+let LANG = 'es';
+
+/* Traduce SOLO para mostrar. Los valores almacenados y enviados
+   al backend permanecen SIEMPRE en español, para no romper la hoja. */
+function tr(s){
+  if(LANG === 'es' || s == null) return s;
+  return I18N[s] || UI_T[s] || s;
+}
+function esc(s){ return String(s).replace(/"/g,'&quot;'); }
+
+function setLang(l){
+  LANG = l;
+  localStorage.setItem('slon_lang', l);
+  document.documentElement.lang = l;
+  document.querySelectorAll('.lang-switch button').forEach(b =>
+    b.classList.toggle('on', b.dataset.l === l));
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const k = el.dataset.t;
+    const M = {
+      brandline:['SSP SLON','SSP SLON'],
+      brandsub:['Diagnóstico técnico de cliente','Client technical assessment'],
+      l_home:['Inicio','Home'], l_cat:['Catálogo','Catalogue'],
+      l_mail:['Contacto','Contact'],
+      rights:['Todos los derechos reservados.','All rights reserved.']
+    };
+    if(M[k]) el.textContent = M[k][l === 'en' ? 1 : 0];
+  });
+  const bp = document.getElementById('btnPrev');
+  const bn = document.getElementById('btnNext');
+  if(bp) bp.textContent = l === 'en' ? '\u2190 Previous' : '\u2190 Anterior';
+  if(bn && bn.dataset.last !== '1')
+    bn.textContent = l === 'en' ? 'Next \u2192' : 'Siguiente \u2192';
+  const ov = document.querySelector('.overlay-txt');
+  if(ov) ov.textContent = l === 'en' ? 'Sending assessment\u2026' : 'Enviando diagn\u00f3stico\u2026';
+  const st = document.querySelector('.success-title');
+  if(st) st.textContent = l === 'en' ? 'Assessment Sent!' : '\u00a1Diagn\u00f3stico Enviado!';
+  const tg = document.querySelector('.success-tagline');
+  if(tg) tg.textContent = l === 'en'
+    ? 'Strength \u00b7 Safety \u00b7 Solution' : 'Fuerza \u00b7 Seguridad \u00b7 Soluci\u00f3n';
+  rebuildUI();
+}
+
+function initLang(){
+  const saved = localStorage.getItem('slon_lang');
+  const l = (saved === 'es' || saved === 'en') ? saved
+    : ((navigator.language || 'es').toLowerCase().startsWith('en') ? 'en' : 'es');
+  document.querySelectorAll('.lang-switch button').forEach(b =>
+    b.addEventListener('click', () => setLang(b.dataset.l)));
+  setLang(l);
+}
+
+/* Reconstruye pills y paneles conservando las respuestas ya dadas */
+function rebuildUI(){
+  const pi = document.getElementById('pillsInner');
+  const fb = document.getElementById('formBody');
+  if(!pi || !fb) return;
+  pi.innerHTML = ''; fb.innerHTML = '';
+  buildPills();
+  buildSections();
+  restoreAnswers();
+  renderCurrent();
+}
+
+/* Repinta en el DOM las respuestas guardadas tras un cambio de idioma */
+function restoreAnswers(){
+  Object.keys(answers).forEach(id => {
+    const v = answers[id];
+    const el = document.getElementById('f_' + id);
+    if(el && typeof v === 'string' && !Array.isArray(v)) el.value = v;
+    const box = document.getElementById('opts_' + id);
+    if(box){
+      const vals = Array.isArray(v) ? v : [v];
+      box.querySelectorAll('.opt').forEach(o => {
+        if(vals.includes(o.dataset.v)) o.classList.add('on');
+      });
+    }
+  });
+}
+
 /* ─── Section Definitions ────────────────────────────────── */
 const SECTIONS = [
   {
-    emoji:"🏢", title:"Datos del Cliente",
+    emoji:"🧭", title:"Tipo de Solicitud", path:"both",
+    sub:"Seleccione el escenario que corresponde a su empresa — el cuestionario se adapta a su respuesta",
+    fields:[
+      {id:"tipo_solicitud", type:"radio", label:"¿Qué necesita de SSP SLON?", req:true,
+        hint:"Si es una operadora con campos activos, el cuestionario técnico permite dimensionar el tratamiento. Si solo requiere comprar producto, el formulario es más corto.",
+        opts:["Tratamiento químico para mi campo o pozos — requiero evaluación técnica","Compra de productos del catálogo — mi empresa ya sabe qué necesita","Compra de productos, pero requiero asesoría para seleccionarlos"]},
+    ]
+  },
+  {
+    emoji:"🏢", title:"Datos del Cliente", path:"both",
     sub:"Empresa operadora y contacto técnico responsable",
     fields:[
       {id:"empresa",       type:"text",  label:"Empresa / Operadora",            ph:"Ej: PETROMONAGAS, PETROPIAR, PDVSA División Oriente…", req:true},
-      {id:"campo",         type:"text",  label:"División / Campo / Macolla",      ph:"Ej: División Oriente — Campo Maturín Norte", req:true},
+      {id:"campo",         type:"text",  label:"División / Campo / Planta / Sede", ph:"Ej: División Oriente — Campo Maturín Norte  ·  o  Planta Morón", req:true},
       {id:"region",        type:"check", label:"Región operacional",              req:true,
         opts:["Faja del Orinoco — Bloque Boyacá","Faja del Orinoco — Bloque Junín","Faja del Orinoco — Bloque Ayacucho","Faja del Orinoco — Bloque Carabobo","División Oriente — Edo. Monagas","División Oriente — Edo. Anzoátegui","Cuenca del Lago de Maracaibo","Costa Afuera / Offshore","Otra región"]},
       {id:"contacto",      type:"text",  label:"Nombre del contacto técnico",    req:true},
@@ -620,7 +753,7 @@ const SECTIONS = [
     ]
   },
   {
-    emoji:"⛽", title:"Datos de Producción",
+    emoji:"⛽", title:"Datos de Producción", path:"field",
     sub:"Parámetros técnicos del campo — base para el cálculo de volúmenes químicos",
     fields:[
       {id:"bopd",          type:"text",  label:"Producción actual (BOPD)",       ph:"Ej: 10,000", req:true,
@@ -640,7 +773,7 @@ const SECTIONS = [
     ]
   },
   {
-    emoji:"🏗️", title:"Infraestructura",
+    emoji:"🏗️", title:"Infraestructura", path:"field",
     sub:"Equipos y sistemas instalados en el campo",
     fields:[
       {id:"separadores",   type:"check", label:"Tipos de separadores presentes", req:true,
@@ -658,7 +791,7 @@ const SECTIONS = [
     ]
   },
   {
-    emoji:"⚠️", title:"Diagnóstico de Problemas",
+    emoji:"⚠️", title:"Diagnóstico de Problemas", path:"field",
     sub:"Problemas operacionales que afectan la producción actualmente",
     fields:[
       {id:"problemas",     type:"check", label:"Problemas que experimenta actualmente", req:true,
@@ -679,7 +812,30 @@ const SECTIONS = [
     ]
   },
   {
-    emoji:"🧪", title:"Programa Químico Actual",
+    emoji:"🛢️", title:"Perforación, Completación y Cementación", path:"field",
+    sub:"Solo si su operación incluye construcción de pozos — omita si no aplica",
+    fields:[
+      {id:"pcc_aplica",  type:"radio", label:"¿Su operación incluye perforación, completación o cementación de pozos?", req:true,
+        opts:["Sí — programa activo de perforación","Sí — completación y reacondicionamiento (workover)","Sí — solo cementación / squeeze","En planificación para los próximos 12 meses","No aplica — solo producción y superficie"]},
+      {id:"pcc_pozos",   type:"text",  label:"Pozos previstos en los próximos 12 meses", ph:"Ej: 12 pozos nuevos + 8 workover"},
+      {id:"pcc_tipo",    type:"check", label:"Tipo de pozo",
+        opts:["Vertical","Direccional","Horizontal","Multilateral","Reentrada / sidetrack","Inyector"]},
+      {id:"pcc_prof",    type:"text",  label:"Profundidad típica (pies o metros)", ph:"Ej: 9,500 ft TVD — indicar unidad"},
+      {id:"pcc_lodo",    type:"check", label:"Sistema de fluido de perforación en uso",
+        opts:["Base agua (WBM) — polímero","Base agua (WBM) — inhibido con KCl","Base aceite (OBM) / emulsión inversa","Base sintética (SBM)","Aire / espuma","Aún no definido"]},
+      {id:"pcc_probl",   type:"check", label:"Problemas durante la construcción del pozo",
+        opts:["Embolamiento de mecha (bit balling)","Inestabilidad de lutitas / derrumbes","Torque y arrastre elevados","Tubería pegada (diferencial o mecánica)","Pérdida de circulación","Filtrado excesivo a alta temperatura","Canalización en la cementación","Migración de gas anular","Daño de formación en completación","Ninguno relevante"]},
+      {id:"pcc_temp",    type:"text",  label:"Temperatura estática de fondo (BHST)", ph:"Ej: 280 °F — crítico para retardadores y control de filtrado"},
+      {id:"pcc_cem",     type:"check", label:"Requerimientos de cementación",
+        opts:["Cemento API Clase G","Lechada liviana / espumada","Sistema resistente a CO₂ / H₂S (servicio amargo)","Microcemento para squeeze o microanulares","Espaciadores y lavadores químicos","Control de migración de gas","No requiere cementación"]},
+      {id:"pcc_compl",   type:"check", label:"Fluidos de completación requeridos",
+        opts:["Salmuera sin sólidos (filtrada)","Píldoras viscosas","Fluido de empaque (packer fluid)","Estimulación matricial post-completación","No requiere"]},
+      {id:"pcc_obs",     type:"textarea", label:"Observaciones sobre el programa de pozos",
+        ph:"Contratista de taladro, cementadora, programa de revestidores, restricciones operacionales…"},
+    ]
+  },
+  {
+    emoji:"🧪", title:"Programa Químico Actual", path:"field",
     sub:"Proveedores y productos en uso actualmente",
     fields:[
       {id:"tiene_quimico", type:"radio", label:"¿El campo tiene un programa de tratamiento químico activo?", req:true,
@@ -695,7 +851,7 @@ const SECTIONS = [
     ]
   },
   {
-    emoji:"📋", title:"Requerimientos & Expectativas",
+    emoji:"📋", title:"Requerimientos & Expectativas", path:"field",
     sub:"Alcance del servicio deseado y tipo de contratación",
     fields:[
       {id:"tipo_servicio", type:"check", label:"¿Qué servicios requiere de SSP SLON?", req:true,
@@ -712,21 +868,125 @@ const SECTIONS = [
     ]
   },
   {
-    emoji:"📎", title:"Información Complementaria",
+    emoji:"🏭", title:"Perfil de la Empresa", path:"buy",
+    sub:"Sector, rol en la cadena y condición como proveedor",
+    fields:[
+      {id:"b_sector", type:"radio", label:"Sector de su empresa", req:true,
+        opts:["Operadora de petróleo y gas","Empresa de servicios petroleros","Refinería o mejorador","Planta de proceso / petroquímica","Industria manufacturera","Generación eléctrica / termoeléctrica","Minería","Tratamiento de agua industrial","Distribuidor o comercializador de químicos","Otro sector"]},
+      {id:"b_rol", type:"radio", label:"Rol de su empresa en la compra", req:true,
+        opts:["Usuario final — consumimos el producto","Contratista — aplicamos el producto a un tercero","Distribuidor — revendemos el producto","Compras corporativas para varias plantas"]},
+      {id:"b_ubic", type:"text", label:"Ubicación de la planta o sitio de consumo", req:true,
+        ph:"Ej: Complejo Morón, Edo. Carabobo  ·  o  Zona Industrial Maracaibo"},
+      {id:"b_registro", type:"radio", label:"¿Requiere que SSP SLON se inscriba como proveedor en su sistema?",
+        opts:["Sí — tenemos proceso formal de homologación de proveedores","Sí — registro simple (RIF, referencias bancarias)","No — compra directa sin registro previo","No lo sé todavía"]},
+      {id:"b_rif", type:"text", label:"RIF de la empresa compradora", ph:"Ej: J-12345678-9"},
+    ]
+  },
+  {
+    emoji:"📦", title:"Productos de Interés", path:"buy",
+    sub:"Qué líneas del catálogo requiere y en qué volumen",
+    fields:[
+      {id:"b_divisiones", type:"check", label:"Divisiones del catálogo que le interesan", req:true,
+        hint:"Puede consultar el catálogo completo de 45 productos antes de responder. Si no sabe cuál corresponde, marque la aplicación y nuestro equipo recomienda el producto.",
+        opts:["Producción, Aguas y Gas — demulsificantes, inhibidores, secuestrantes","Línea Comercial — corrosión, parafinas, completación, glicoles, resinas","Perforación, Completación y Cementación","SLON PETROCHEM™ — plantas de proceso, calderas, torres de enfriamiento","Materias primas e insumos químicos","Aún no sé — requiero recomendación técnica"]},
+      {id:"b_productos", type:"textarea", label:"Productos específicos requeridos",
+        ph:"Ej: SLON BOLT™ — 10 tambores/mes\nSLON PURE™ — 4 tambores/mes\nMEG — 2 IBC/trimestre\n\nSi no conoce los nombres, describa la función que necesita.",
+        hint:"Indique nombre del producto y cantidad estimada. Si no lo sabe, describa el problema y lo traducimos a producto."},
+      {id:"b_volumen", type:"radio", label:"Volumen mensual estimado de compra", req:true,
+        opts:["Menos de 5 tambores/mes","5 – 20 tambores/mes","20 – 100 tambores/mes","Más de 100 tambores/mes","Compra puntual, no recurrente","Aún por definir"]},
+      {id:"b_presentacion", type:"check", label:"Presentación preferida",
+        opts:["Tambor 200 L / 200 kg","IBC 1000 L / 1000 kg","Saco 25 kg","Big bag 1000–1500 kg","Granel / cisterna","Según disponibilidad"]},
+      {id:"b_frecuencia", type:"radio", label:"Frecuencia de reposición",
+        opts:["Semanal","Quincenal","Mensual","Trimestral","Compra única","Bajo demanda, sin patrón fijo"]},
+    ]
+  },
+  {
+    emoji:"⚙️", title:"Aplicación y Condiciones", path:"buy",
+    sub:"Dónde se usará el producto — determina la recomendación técnica y la dosificación",
+    fields:[
+      {id:"b_sistema", type:"check", label:"Sistema o proceso donde se aplicará", req:true,
+        opts:["Producción de crudo — pozos y líneas","Separación y tratamiento en superficie","Agua de inyección o producida","Torres de enfriamiento","Calderas y generación de vapor","Tratamiento de gas","Perforación o cementación de pozos","Tratamiento de efluentes","Almacenamiento y transporte","Otro proceso industrial"]},
+      {id:"b_problema", type:"textarea", label:"Problema o necesidad que busca resolver",
+        ph:"Ej: incrustaciones en intercambiadores, crecimiento bacteriano en agua recirculada, corrosión en líneas de condensado…",
+        hint:"Cuanto más concreto, mejor podemos recomendar producto y dosis."},
+      {id:"b_condiciones", type:"textarea", label:"Condiciones del sistema (opcional)",
+        ph:"Temperatura, pH, dureza del agua, caudal, material de la tubería, presencia de H₂S o CO₂…"},
+      {id:"b_usa_actual", type:"radio", label:"¿Usa actualmente algún producto equivalente?",
+        opts:["Sí — quiero comparar desempeño y precio","Sí — pero el proveedor no tiene disponibilidad","No — es una necesidad nueva","Estamos evaluando varias opciones"]},
+      {id:"b_prov_actual", type:"text", label:"Proveedor y producto actual (si aplica)",
+        ph:"Nombre del proveedor y referencia del producto"},
+      {id:"b_muestra", type:"radio", label:"¿Requiere muestra o prueba piloto antes de la compra?",
+        opts:["Sí — muestra de laboratorio para evaluación","Sí — prueba piloto en planta","No — compra directa","Depende de la propuesta"]},
+    ]
+  },
+  {
+    emoji:"🚚", title:"Condiciones Comerciales", path:"buy",
+    sub:"Entrega, contratación y requisitos documentales",
+    fields:[
+      {id:"b_entrega", type:"radio", label:"Modalidad de entrega requerida", req:true,
+        opts:["Entrega en nuestras instalaciones (puerta a puerta)","Retiro en almacén de SSP SLON","Entrega en almacén de un tercero","Por definir según cotización"]},
+      {id:"b_direccion", type:"text", label:"Ciudad o estado de entrega",
+        ph:"Ej: Punto Fijo, Edo. Falcón"},
+      {id:"b_contrato", type:"radio", label:"Modalidad de contratación",
+        opts:["Orden de compra puntual","Contrato marco anual con órdenes periódicas","Licitación o concurso de precios","Acuerdo de distribución","Aún no definido"]},
+      {id:"b_pago", type:"radio", label:"Condiciones de pago previstas",
+        opts:["Pago anticipado","Contra entrega","Crédito 30 días","Crédito 60 días o más","Por negociar"]},
+      {id:"b_docs", type:"check", label:"Documentación que su empresa requiere",
+        hint:"Todos nuestros productos cuentan con ficha técnica, hoja de seguridad, especificación de venta y etiqueta en español e inglés.",
+        opts:["Ficha técnica (TDS)","Hoja de seguridad (HDSM / SDS)","Certificado de análisis por lote (COA)","Especificación de venta","Certificado de origen","Documentación para transporte de mercancía peligrosa","Factura fiscal con IVA"]},
+      {id:"b_plazo", type:"radio", label:"Plazo en que necesita el producto", req:true,
+        opts:["Urgente — menos de 2 semanas","Un mes","Dos a tres meses","Solo estamos cotizando para presupuesto"]},
+    ]
+  },
+  {
+    emoji:"📎", title:"Información Complementaria", path:"both",
     sub:"Datos técnicos adicionales y observaciones finales",
     fields:[
-      {id:"analisis_agua", type:"textarea", label:"Análisis de agua producida (opcional)",
+      {id:"analisis_agua", only:"field", type:"textarea", label:"Análisis de agua producida (opcional)",
         ph:"TDS, Cl⁻, SO₄²⁻, Ca²⁺, Mg²⁺, Ba²⁺, Fe total, pH, temperatura…\nSi no dispone, dejar en blanco.",
         hint:"Permite calcular índices de incrustaciones y dimensionar inhibidores con precisión."},
-      {id:"analisis_crudo",type:"textarea", label:"Análisis de crudo disponible (opcional)",
+      {id:"analisis_crudo",only:"field", type:"textarea", label:"Análisis de crudo disponible (opcional)",
         ph:"SARA, viscosidad, densidad, TAN, wax content…\nSi no dispone, dejar en blanco."},
       {id:"observaciones", type:"textarea", label:"Observaciones adicionales para el equipo técnico de SSP SLON",
         ph:"Antecedentes del campo, restricciones operacionales, requisitos especiales, experiencias previas con químicos, cualquier información que considere relevante…"},
-      {id:"como_conocio",  type:"radio",    label:"¿Cómo conoció a SSP SLON DE VENEZUELA?",
-        opts:["Referido por colega o conocido","PDVSA / proceso de licitación","Sitio web / redes sociales","Visita comercial del equipo SSP SLON","Experiencia previa con GEODS DE VENEZUELA","Evento / conferencia técnica","Otro"]},
+      {id:"como_conocio",  type:"radio",    label:"¿Cómo conoció a SSP SLON?",
+        opts:["Referido por colega o conocido","PDVSA / proceso de licitación","Sitio web / redes sociales","Visita comercial del equipo SSP SLON","Evento / conferencia técnica","Otro"]},
     ]
   },
 ];
+
+/* ─── Enrutado por tipo de solicitud ─────────────────────── */
+/* ACTIVE guarda los índices de SECTIONS visibles según la ruta.
+   `current` es un puntero DENTRO de ACTIVE, no dentro de SECTIONS. */
+let ACTIVE = [];
+
+function currentPath(){
+  const v = answers['tipo_solicitud'] || '';
+  if(v.startsWith('Tratamiento químico para mi campo')) return 'field';
+  if(v.startsWith('Compra de productos')) return 'buy';
+  return null;                       // aún sin elegir
+}
+
+function computeActive(){
+  const p = currentPath();
+  const prevIdx = ACTIVE[current];   // sección real antes de recalcular
+  ACTIVE = SECTIONS.map((s,i)=>({s,i}))
+    .filter(({s}) => s.path === 'both' || (p && s.path === p))
+    .map(({i}) => i);
+  if(!p) ACTIVE = [0];               // sin elegir, solo el enrutador
+  // Conservar la posición si la sección sigue visible
+  const k = ACTIVE.indexOf(prevIdx);
+  current = k > -1 ? k : Math.min(current, ACTIVE.length - 1);
+  if(current < 0) current = 0;
+}
+
+function secAt(k){ return SECTIONS[ACTIVE[k]]; }
+
+/* Campos visibles de una sección según la ruta (algunos son solo de campo) */
+function visibleFields(sec){
+  const p = currentPath();
+  return sec.fields.filter(f => !f.only || f.only === p);
+}
 
 /* ─── State ──────────────────────────────────────────────── */
 let current = 0;
@@ -756,8 +1016,8 @@ function buildPills() {
     const pill = document.createElement('button');
     pill.id = `pill${i}`;
     pill.className = 'pill';
-    pill.innerHTML = `<span class="pill-dot"></span>${s.emoji} ${s.title}`;
-    pill.onclick = () => goto(i);
+    pill.innerHTML = `<span class="pill-dot"></span>${s.emoji} ${tr(s.title)}`;
+    pill.onclick = () => gotoSection(i);
     c.appendChild(pill);
   });
 }
@@ -777,33 +1037,35 @@ function buildSections() {
       <div class="sec-head">
         <span class="sec-emoji">${sec.emoji}</span>
         <div>
-          <div class="sec-num">Sección ${si+1} de ${SECTIONS.length}</div>
-          <div class="sec-title">${sec.title}</div>
-          <div class="sec-sub">${sec.sub}</div>
+          <div class="sec-num" data-secnum="${si}"></div>
+          <div class="sec-title">${tr(sec.title)}</div>
+          <div class="sec-sub">${tr(sec.sub)}</div>
         </div>
       </div>
       <div class="hint-bar">
         <span>💡</span>
-        <span>Los campos con <span style="color:var(--red)">●</span> son obligatorios. Si no conoce el dato exacto, use el mejor estimado disponible.</span>
+        <span>${LANG==='en'
+          ? 'Fields marked <span style="color:var(--red)">●</span> are required. If you do not know the exact figure, use the best estimate available.'
+          : 'Los campos con <span style="color:var(--red)">●</span> son obligatorios. Si no conoce el dato exacto, use el mejor estimado disponible.'}</span>
       </div>
     `;
 
     const card = document.createElement('div');
     card.className = 'fields-card';
 
-    sec.fields.forEach(f => {
+    visibleFields(sec).forEach(f => {
       const fld = document.createElement('div');
       fld.className = 'field';
 
-      const lbl = `<div class="field-lbl">${f.req?'<span class="req"></span>':''}${f.label}</div>`;
-      const hint = f.hint ? `<div class="field-hint">${f.hint}</div>` : '';
+      const lbl = `<div class="field-lbl">${f.req?'<span class="req"></span>':''}${tr(f.label)}</div>`;
+      const hint = f.hint ? `<div class="field-hint">${tr(f.hint)}</div>` : '';
       let inp = '';
 
       if (f.type === 'text' || f.type === 'email' || f.type === 'tel') {
-        inp = `<input type="${f.type}" id="f_${f.id}" placeholder="${f.ph||''}" autocomplete="off" 
+        inp = `<input type="${f.type}" id="f_${f.id}" placeholder="${esc(tr(f.ph||''))}" autocomplete="off" 
                oninput="setVal('${f.id}',this.value)">`;
       } else if (f.type === 'textarea') {
-        inp = `<textarea id="f_${f.id}" placeholder="${f.ph||''}" 
+        inp = `<textarea id="f_${f.id}" placeholder="${esc(tr(f.ph||''))}" 
                oninput="setVal('${f.id}',this.value)"></textarea>`;
       } else if (f.type === 'radio' || f.type === 'check') {
         inp = `<div class="opts-list" id="opts_${f.id}">${
@@ -812,7 +1074,7 @@ function buildSections() {
               <div class="opt-box${f.type==='radio'?' circle':''}">
                 ${f.type==='check'?'<span class="opt-check">✓</span>':'<div class="opt-radio-dot"></div>'}
               </div>
-              <span class="opt-txt">${o}</span>
+              <span class="opt-txt">${tr(o)}</span>
             </div>`).join('')
         }</div>`;
       }
@@ -829,52 +1091,80 @@ function buildSections() {
 
 /* ─── Navigation ─────────────────────────────────────────── */
 function goto(idx) {
-  current = Math.max(0, Math.min(idx, SECTIONS.length-1));
+  current = Math.max(0, Math.min(idx, ACTIVE.length-1));
   renderCurrent();
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
+/* Salto desde una pill: recibe el índice REAL de SECTIONS */
+function gotoSection(realIdx) {
+  const k = ACTIVE.indexOf(realIdx);
+  if (k > -1) goto(k);
+}
+
 function nextSec() {
   if (!validateSection()) return;
-  if (current === SECTIONS.length-1) { submitForm(); return; }
+  if (current === ACTIVE.length-1) { submitForm(); return; }
   goto(current+1);
 }
 
 function prevSec() { goto(current-1); }
 
 function renderCurrent() {
-  // Panels
+  computeActive();
+  const total = ACTIVE.length;
+  const realCur = ACTIVE[current];
+
+  // Panels: solo la sección activa actual
   SECTIONS.forEach((_, i) => {
-    document.getElementById(`sec${i}`).style.display = i===current ? 'block' : 'none';
+    document.getElementById(`sec${i}`).style.display = (i===realCur) ? 'block' : 'none';
   });
 
-  // Progress segments
+  // Numeración interna de cada panel, relativa a la ruta
+  ACTIVE.forEach((realIdx, k) => {
+    const el = document.querySelector(`[data-secnum="${realIdx}"]`);
+    if (el) el.textContent = (LANG==='en')
+      ? `Section ${k+1} of ${total}` : `Sección ${k+1} de ${total}`;
+  });
+
+  // Barra de progreso: un segmento por sección activa
   SECTIONS.forEach((_, i) => {
     const seg = document.getElementById(`ps${i}`);
-    seg.className = 'prog-seg' + (i<current?' done':i===current?' active':'');
+    if (!seg) return;
+    const k = ACTIVE.indexOf(i);
+    if (k === -1) { seg.style.display = 'none'; return; }
+    seg.style.display = '';
+    seg.className = 'prog-seg' + (k<current?' done':k===current?' active':'');
   });
 
-  // Pills
+  // Pills: ocultar las que no pertenecen a la ruta
   SECTIONS.forEach((_, i) => {
     const p = document.getElementById(`pill${i}`);
-    const done = i<current && isSectionFilled(i);
-    p.className = 'pill' + (i===current?' active':done?' done':'');
+    if (!p) return;
+    const k = ACTIVE.indexOf(i);
+    if (k === -1) { p.style.display = 'none'; return; }
+    p.style.display = '';
+    const done = k<current && isSectionFilled(i);
+    p.className = 'pill' + (k===current?' active':done?' done':'');
   });
 
-  // Label
-  document.getElementById('progLabel').textContent = `${current+1} / ${SECTIONS.length}`;
+  // Etiqueta de progreso
+  document.getElementById('progLabel').textContent = `${current+1} / ${total}`;
 
-  // Buttons
+  // Botones
   const prev = document.getElementById('btnPrev');
   const next = document.getElementById('btnNext');
   prev.style.display = current > 0 ? 'block' : 'none';
-  const isLast = current === SECTIONS.length-1;
+  const isLast = current === total-1;
   next.className = 'btn ' + (isLast ? 'btn-submit' : 'btn-next');
-  next.textContent = isLast ? '✅  Enviar Diagnóstico' : 'Siguiente →';
+  next.dataset.last = isLast ? '1' : '0';
+  next.textContent = isLast
+    ? (LANG==='en' ? '✅  Submit Request' : '✅  Enviar Solicitud')
+    : (LANG==='en' ? 'Next →' : 'Siguiente →');
 
   // Scroll pill into view
-  const pill = document.getElementById(`pill${current}`);
-  if (pill) pill.scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
+  const pill = document.getElementById(`pill${ACTIVE[current]}`);
+  if (pill && pill.scrollIntoView) pill.scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
 }
 
 /* ─── Answers ────────────────────────────────────────────── */
@@ -882,7 +1172,17 @@ function setVal(id, val) { answers[id] = val; }
 
 function toggleOpt(id, val, type) {
   if (type === 'radio') {
+    const changed = answers[id] !== val;
     answers[id] = val;
+    if (id === 'tipo_solicitud' && changed) {
+      // La ruta cambió: recalcular secciones visibles y repintar
+      document.querySelectorAll(`#opts_${id} .opt`).forEach(el => {
+        el.classList.toggle('sel', el.dataset.v === val);
+      });
+      // Reconstruir: cambian tanto las secciones como los campos condicionales
+      if (typeof rebuildUI === 'function') rebuildUI(); else renderCurrent();
+      return;
+    }
     document.querySelectorAll(`#opts_${id} .opt`).forEach(el => {
       el.classList.toggle('sel', el.dataset.v === val);
     });
@@ -900,7 +1200,7 @@ function toggleOpt(id, val, type) {
 
 function isSectionFilled(idx) {
   const sec = SECTIONS[idx];
-  return sec.fields.filter(f=>f.req).every(f => {
+  return visibleFields(sec).filter(f=>f.req).every(f => {
     const v = answers[f.id];
     if (f.type==='check') return v && v.length > 0;
     return v && String(v).trim().length > 0;
@@ -909,16 +1209,16 @@ function isSectionFilled(idx) {
 
 /* ─── Validation ─────────────────────────────────────────── */
 function validateSection() {
-  const sec = SECTIONS[current];
-  const req = sec.fields.filter(f => f.req);
+  const sec = secAt(current);
+  const req = visibleFields(sec).filter(f => f.req);
   for (const f of req) {
     const v = answers[f.id];
     const empty = !v || (Array.isArray(v) ? v.length===0 : String(v).trim()==='');
     if (empty) {
-      showToast(`⚠️ "${f.label}" es obligatorio`);
+      showToast(LANG==='en' ? `⚠️ "${tr(f.label)}" is required` : `⚠️ "${f.label}" es obligatorio`);
       // Scroll to field
       const el = document.getElementById(`f_${f.id}`) || document.getElementById(`opts_${f.id}`);
-      if (el) el.scrollIntoView({behavior:'smooth', block:'center'});
+      if (el && el.scrollIntoView) el.scrollIntoView({behavior:'smooth', block:'center'});
       return false;
     }
   }
@@ -944,8 +1244,8 @@ async function submitForm() {
 
   // Flatten answers to simple object with string values
   const payload = {};
-  SECTIONS.forEach(sec => {
-    sec.fields.forEach(f => {
+  ACTIVE.map(i => SECTIONS[i]).forEach(sec => {
+    visibleFields(sec).forEach(f => {
       const v = answers[f.id];
       if (v !== undefined && v !== null && v !== '') {
         payload[f.label] = Array.isArray(v) ? v.join(' | ') : String(v);
@@ -958,7 +1258,9 @@ async function submitForm() {
   payload['_empresa']  = answers['empresa'] || '';
   payload['_contacto'] = answers['contacto'] || '';
   payload['_email']    = answers['email'] || '';
-  payload['_urgencia'] = answers['urgencia'] || '';
+  payload['_urgencia'] = answers['urgencia'] || answers['b_plazo'] || '';
+  payload['_tipo_solicitud'] = answers['tipo_solicitud'] || '';
+  payload['_ruta'] = currentPath() === 'buy' ? 'COMPRA' : 'CAMPO';
 
   try {
     if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL === 'PEGAR_AQUI_LA_URL_DE_TU_WEB_APP') {
@@ -1003,6 +1305,8 @@ function showSuccess() {
 
 /* ─── Init ───────────────────────────────────────────────── */
 buildUI();
+initLang();
+document.getElementById('yr').textContent = new Date().getFullYear();
 </script>
 </body>
 </html>
